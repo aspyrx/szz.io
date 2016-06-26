@@ -1,0 +1,57 @@
+@import '~base';
+
+.header {
+    position: relative;
+    display: flex;
+    flex-flow: row wrap;
+    align-items: baseline;
+    font-size: 30px;
+
+    .logo {
+        margin: 0 @spacing-x;
+        color: @color-text;
+        transition: color @duration-transition;
+
+        span {
+            color: @color-primary;
+            transition: color @duration-transition;
+        }
+
+        &:hover {
+            color: @color-primary;
+
+            span {
+                color: @color-text;
+            }
+        }
+    }
+
+    .navigation {
+        flex: 1;
+        display: flex;
+        flex-flow: row wrap;
+        min-width: 75%;
+        align-items: baseline;
+
+        animation-duration: 0.75 * @duration-header;
+        animation-delay: 0.25 * @duration-header;
+        animation-fill-mode: both;
+        animation-name: navigationFadeInDown;
+
+        @keyframes navigationFadeInDown {
+            0% { opacity: 0; transform: translateY(-25%); }
+        }
+
+        a {
+            margin: 0 @spacing-x;
+            font-weight: @font-weight-light;
+            color: @color-text;
+            transition: color @duration-transition;
+
+            &:hover, &:active, &.active {
+                color: @color-text-active;
+            }
+        }
+    }
+}
+

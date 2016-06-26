@@ -1,0 +1,118 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto+Condensed:300,400,700);
+@import '~base';
+
+a {
+    color: @color-primary;
+    text-decoration: none;
+    transition: color @duration-transition;
+    &:hover, &:active {
+        color: @color-text;
+    }
+}
+
+:global(#app) {
+    font-family: 'Roboto Condensed', sans-serif;
+    font-size: @font-size;
+    line-height: @line-height;
+    min-height: 100vh;
+    background-color: @color-app-container;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+
+    :focus {
+        outline: none;
+    }
+
+    .bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        min-width: 100vw;
+        min-height: 100vh;
+        overflow: hidden;
+    }
+
+    .containers {
+        flex: 1;
+        max-width: @width-container-max;
+        display: flex;
+        flex-flow: column;
+        position: relative;
+
+        .container {
+            position: relative;
+
+            &:first-of-type {
+                margin-top: 0;
+            }
+
+            &:last-of-type {
+                margin-bottom: 0;
+            }
+
+            margin: @spacing-y 0;
+            padding: @spacing-y @spacing-x;
+
+            color: @color-text;
+
+            > div {
+                margin: @spacing-y 0;
+            }
+
+            .replaceAnimated {
+                .appear {
+                    opacity: 0.001;
+                    transform: translateY(-@spacing-y);
+                }
+
+                .appearActive {
+                    opacity: 1;
+                    transform: none;
+                    transition: all @duration-header;
+                }
+
+                .enter {
+                    opacity: 0.001;
+                    transform: translateX(-100%);
+                }
+
+                .enterActive {
+                    opacity: 1;
+                    transform: none;
+                    transition: all @duration-enter-leave;
+                }
+
+                .leave {
+                    opacity: 1;
+                    transform: none;
+                }
+
+                .leaveActive {
+                    opacity: 0.001;
+                    transform: translateX(100%);
+                    transition: all @duration-enter-leave;
+                }
+
+
+                &.increase {
+                    .enter {
+                        opacity: 0.001;
+                        transform: translateX(100%);
+                    }
+
+                    .enterActive {
+                        opacity: 1;
+                        transform: none;
+                        transition: all @duration-enter-leave;
+                    }
+
+                    .leaveActive {
+                        transform: translateX(-100%);
+                    }
+                }
+            }
+        }
+    }
+}
+
