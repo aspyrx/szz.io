@@ -5,23 +5,71 @@
     display: flex;
     flex-flow: row wrap;
     align-items: baseline;
-    font-size: 30px;
+    @height-header: 30px;
+    font-size: @height-header;
+
+    animation-duration: @duration-appear;
+    animation-fill-mode: both;
+    animation-name: headerFadeInDown;
+
+    @keyframes headerFadeInDown {
+        0% { opacity: 0; transform: translateY(-25%); }
+    }
 
     .logo {
         margin: 0 @spacing-x;
         color: @color-text;
         transition: color @duration-transition;
 
-        span {
-            color: @color-primary;
-            transition: color @duration-transition;
+        .logoS {
+            display: inline-block;
+            position: relative;
+            width: @height-header / @line-height;
+            height: @height-header / @line-height;
+
+            @stroke-width-logo: 0.1 * @height-header;
+
+            &:not(:first-child) {
+                transform: scaleX(-1);
+            }
+
+            .round {
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                border: @stroke-width-logo solid;
+                border-color: @color-primary transparent;
+                border-radius: 50%;
+                transition: border-color @duration-transition;
+            }
+
+            .line {
+                position: absolute;
+                height: @stroke-width-logo;
+                width: 100%;
+                top: calc(~"50%" - (@stroke-width-logo / 2));
+                transform: rotate(45deg);
+                background-color: @color-primary;
+                border-radius: @stroke-width-logo / 2;
+                transition: background-color @duration-transition;
+            }
+
         }
 
-        &:hover {
+
+        &:hover, &:active {
             color: @color-primary;
 
-            span {
-                color: @color-text;
+            .logoS {
+                .round {
+                    border-color: @color-text transparent;
+                }
+
+                .line {
+                    background-color: @color-text;
+                }
             }
         }
     }
@@ -32,15 +80,6 @@
         flex-flow: row wrap;
         min-width: 75%;
         align-items: baseline;
-
-        animation-duration: 0.75 * @duration-header;
-        animation-delay: 0.25 * @duration-header;
-        animation-fill-mode: both;
-        animation-name: navigationFadeInDown;
-
-        @keyframes navigationFadeInDown {
-            0% { opacity: 0; transform: translateY(-25%); }
-        }
 
         a {
             margin: 0 @spacing-x;

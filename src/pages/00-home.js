@@ -26,11 +26,12 @@ function Bio(props) {
             <h2><a href="https://ece.cmu.edu/" target="_blank">
                     Electrical and Computer Engineering
                 </a>
-                &nbsp;major at&nbsp;
+                <span> major at </span>
                 <a href="https://www.cmu.edu/" target="_blank">
                     Carnegie Mellon University
                 </a>
-                .</h2>
+                <span>.</span>
+            </h2>
             <span className={styles.icons}>
                 <GithubIcon />
                 <FacebookIcon />

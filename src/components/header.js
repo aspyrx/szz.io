@@ -3,9 +3,19 @@ import Link from 'react-router/lib/Link';
 
 import styles from './header.less';
 
+function LogoS() {
+    return <div className={styles.logoS}>
+        <div className={styles.round} />
+        <div className={styles.line} />
+    </div>
+}
+
 function Logo() {
     return <div className={styles.logo}>
-        <span>szz</span>.io
+        <LogoS />
+        <LogoS />
+        <LogoS />
+        .io
     </div>;
 }
 
