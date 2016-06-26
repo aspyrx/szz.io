@@ -23,11 +23,12 @@
         transition: color @duration-transition;
 
         .logoS {
+            @size-logo-s: @height-header * 0.55;
             display: inline-block;
             position: relative;
-            width: @height-header / @line-height;
-            height: @height-header / @line-height;
-            margin: 0 -2px;
+            width: @size-logo-s;
+            height: @size-logo-s;
+            margin: 0 (-@size-logo-s * 0.1);
 
             @stroke-width-logo: 2px;
 
