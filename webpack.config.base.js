@@ -73,7 +73,7 @@ module.exports = {
                 loader: 'babel'
             },
             {
-                test: /\.(eot|woff|ttf|svg|jpg|ico)$/,
+                test: /\.(eot|woff|ttf|svg|jpg|png|ico)$/,
                 loader: 'url-loader?limit=10000'
             }
         ]
