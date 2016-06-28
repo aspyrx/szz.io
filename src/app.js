@@ -8,7 +8,6 @@ import styles from './app.less'
 import 'normalize-css/normalize.css';
 import '^/octicons/octicons.less';
 
-import favicon from '~/images/favicon.ico';
 import bg from '~/images/bg.svg';
 
 export default class App extends Component {
@@ -28,14 +27,6 @@ export default class App extends Component {
 
         this.linkOrder = {};
         pages.map((module, i) => this.linkOrder[module.page.path] = i);
-    }
-
-    componentWillMount() {
-        const head = document.getElementsByTagName('head')[0];
-        const iconLink = document.createElement('link');
-        iconLink.rel = 'shortcut icon';
-        iconLink.href = favicon;
-        head.appendChild(iconLink);
     }
 
     componentWillReceiveProps(props) {
