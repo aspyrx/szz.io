@@ -3,7 +3,6 @@ import ReactCSSTransitionReplace from 'react-css-transition-replace';
 import classNames from 'classnames';
 import pages from '~/pages';
 import Header from '~/components/header';
-import { Favicon } from '~/components/icons';
 
 import styles from './app.less'
 import 'normalize-css/normalize.css';
@@ -50,7 +49,6 @@ export default class App extends Component {
         });
 
         return <div className={styles.containers}>
-            <Favicon />
             <object className={styles.bg} data={bg} type="image/svg+xml" />
             <div className={styles.container}>
                 <Header pages={pages} />
