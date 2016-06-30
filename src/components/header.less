@@ -23,6 +23,8 @@
         color: @color-text;
         transition: color @duration-transition;
 
+        @duration-logo: 1.5 * @duration-appear;
+
         .logoS {
             @size-logo-s: @height-header * 0.55;
             display: inline-block;
@@ -31,16 +33,17 @@
             height: @size-logo-s;
             margin: 0 (-@size-logo-s * 0.1);
 
+
             @offset-logo: 0.8 * @size-logo-s;
-            animation-duration: 1.5 * @duration-appear;
             animation-fill-mode: both;
+            animation-duration: @duration-logo;
 
             &:first-child {
                 animation-name: logoAnim1;
 
                 @keyframes logoAnim1 {
-                    0% { opacity: 0 }
-                    33% { opacity: 1 }
+                    0% { transform: rotate(720deg); }
+                    50% { transform: rotate(0deg); }
                 }
             }
 
@@ -49,9 +52,8 @@
                 animation-name: logoAnim2;
 
                 @keyframes logoAnim2 {
-                    0% { opacity: 0; transform: translateX(-@offset-logo) scaleX(-1); }
-                    33% { opacity: 1; transform: translateX(-@offset-logo) scaleX(-1); }
-                    66% { opacity: 1; transform: scaleX(-1); }
+                    0% { transform: translateX(-@offset-logo) rotate(720deg) scaleX(-1); }
+                    50% { transform: translateX(-@offset-logo) rotate(0deg) scaleX(-1); }
                 }
             }
 
@@ -60,9 +62,8 @@
                 animation-name: logoAnim3;
 
                 @keyframes logoAnim3 {
-                    0% { opacity: 0; transform: translateX(-2 * @offset-logo) scaleX(-1); }
-                    33% { opacity: 0; transform: translateX(-2 * @offset-logo) scaleX(-1); }
-                    66% { opacity: 1; transform: translateX(-@offset-logo) scaleX(-1); }
+                    0% { transform: translateX(-2 * @offset-logo) rotate(720deg) scaleX(-1); }
+                    50% { transform: translateX(-2 * @offset-logo) rotate(0deg) scaleX(-1); }
                 }
             }
 
@@ -92,6 +93,16 @@
             }
         }
 
+        .logoText {
+            animation-fill-mode: both;
+            animation-duration: @duration-logo;
+            animation-name: logoAnimText;
+
+            @keyframes logoAnimText {
+                0% { opacity: 0 }
+                50% { opacity: 0 }
+            }
+        }
 
         &:hover, &:active {
             color: @color-primary;

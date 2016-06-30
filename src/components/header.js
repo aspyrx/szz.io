@@ -15,7 +15,7 @@ function Logo() {
         <LogoS />
         <LogoS />
         <LogoS />
-        .io
+        <span className={styles.logoText}>.io</span>
     </div>;
 }
 
