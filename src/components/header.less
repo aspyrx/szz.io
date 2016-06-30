@@ -18,6 +18,7 @@
     }
 
     .logo {
+        position: relative;
         margin: 0 @spacing-x;
         color: @color-text;
         transition: color @duration-transition;
@@ -30,11 +31,42 @@
             height: @size-logo-s;
             margin: 0 (-@size-logo-s * 0.1);
 
-            @stroke-width-logo: 2px;
+            @offset-logo: 0.8 * @size-logo-s;
+            animation-duration: 1.5 * @duration-appear;
+            animation-fill-mode: both;
 
-            &:not(:first-child) {
-                transform: scaleX(-1);
+            &:first-child {
+                animation-name: logoAnim1;
+
+                @keyframes logoAnim1 {
+                    0% { opacity: 0 }
+                    33% { opacity: 1 }
+                }
             }
+
+            &:nth-child(2) {
+                transform: scaleX(-1);
+                animation-name: logoAnim2;
+
+                @keyframes logoAnim2 {
+                    0% { opacity: 0; transform: translateX(-@offset-logo) scaleX(-1); }
+                    33% { opacity: 1; transform: translateX(-@offset-logo) scaleX(-1); }
+                    66% { opacity: 1; transform: scaleX(-1); }
+                }
+            }
+
+            &:nth-child(3) {
+                transform: scaleX(-1);
+                animation-name: logoAnim3;
+
+                @keyframes logoAnim3 {
+                    0% { opacity: 0; transform: translateX(-2 * @offset-logo) scaleX(-1); }
+                    33% { opacity: 0; transform: translateX(-2 * @offset-logo) scaleX(-1); }
+                    66% { opacity: 1; transform: translateX(-@offset-logo) scaleX(-1); }
+                }
+            }
+
+            @stroke-width-logo: 2px;
 
             .round {
                 position: absolute;
@@ -58,7 +90,6 @@
                 border-radius: @stroke-width-logo / 2;
                 transition: background-color @duration-transition;
             }
-
         }
 
 
