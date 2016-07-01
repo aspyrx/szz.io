@@ -18,7 +18,7 @@ module.exports = {
     },
     output: {
         path: outDir,
-        filename: '[hash].min.js'
+        filename: 'app.[hash].js'
     },
     resolve: {
         alias: {
@@ -28,6 +28,9 @@ module.exports = {
         root: srcDir,
         extensions: ['', '.js'],
         modulesDirectories: ['node_modules']
+    },
+    resolveLoader: {
+        root: path.resolve(ctxDir, 'node_modules')
     },
     postcss: () => [autoprefixer],
     module: {
@@ -74,7 +77,7 @@ module.exports = {
             },
             {
                 test: /\.(eot|woff|ttf|svg|jpg|png|ico)$/,
-                loader: 'url-loader?limit=10000'
+                loader: 'url?limit=10000&name=[path][name].[hash:base64:5].[ext]'
             }
         ]
     },

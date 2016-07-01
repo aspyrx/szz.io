@@ -1,10 +1,5 @@
 const pagesCtx = require.context('.', false, /^(.(?!index))*\.js$/);
-
-const pages = [];
-
-for (const key of pagesCtx.keys()) {
-    pages.push(pagesCtx(key));
-}
+const pages = pagesCtx.keys().map(key => pagesCtx(key));
 
 pages.indexPath = '/home';
 

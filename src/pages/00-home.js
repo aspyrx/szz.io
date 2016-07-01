@@ -3,6 +3,7 @@
  */
 
 import React from 'react';
+import classNames from 'classnames';
 import {GithubIcon, FacebookIcon} from '~/components/icons';
 import onLoadOnce from '~/components/onLoadOnce';
 
@@ -41,9 +42,14 @@ function Bio(props) {
 }
 
 export default function Home(props) {
-    return <div className={styles.home} {...props}>
+    const { className, ...rest } = props;
+    return <div className={classNames(className, styles.home)} {...rest}>
         <Bio />
     </div>;
+}
+
+Home.propTypes = {
+    className: React.PropTypes.any
 }
 
 export const page = {

@@ -55,7 +55,8 @@ export default function Projects(props) {
         }
     }
 
-    return <div className={styles.projects} {...props}>
+    const { className, ...rest } = props;
+    return <div className={classNames(className, styles.projects)} {...rest}>
         {projects.map((project, i) => {
             return <Project className={styles.project}
                 key={i}
@@ -63,6 +64,10 @@ export default function Projects(props) {
                 onClick={() => projectClicked(project)} />;
         })}
     </div>;
+}
+
+Projects.propTypes = {
+    className: React.PropTypes.any
 }
 
 export const page = {
