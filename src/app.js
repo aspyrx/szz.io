@@ -61,7 +61,8 @@ export default class App extends Component {
                         leave: styles.leave,
                         leaveActive: styles.leaveActive,
                         appear: styles.appear,
-                        appearActive: styles.appearActive
+                        appearActive: styles.appearActive,
+                        toString() { return styles.replaceAnimated; }
                     }}
                     transitionAppear={true}
                     transitionAppearTimeout={300}

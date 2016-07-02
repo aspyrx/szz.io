@@ -5,13 +5,13 @@
 import React from 'react';
 import classNames from 'classnames';
 import {GithubIcon, FacebookIcon} from '~/components/icons';
-import onLoadOnce from '~/components/onLoadOnce';
+import cacheable from '~/components/cacheable';
 
 import styles from './home.less';
 
 import avatar from '~/images/avatar.jpg';
 
-const Img = onLoadOnce(function img(props) {
+const Img = cacheable(function img(props) {
     return <img {...props} />
 });
 

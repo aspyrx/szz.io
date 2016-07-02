@@ -15,10 +15,10 @@ a {
     font-size: @font-size;
     line-height: @line-height;
     min-height: 100vh;
-    background-color: @color-app-container;
     display: flex;
     justify-content: center;
     overflow: hidden;
+    background-color: @color-bg;
 
     :focus {
         outline: none;
@@ -61,6 +61,10 @@ a {
             }
 
             .replaceAnimated {
+                &:global(-height) {
+                    transition: height @duration-transition;
+                }
+
                 .appear {
                     opacity: 0.001;
                     transform: translateY(-@spacing-y);
