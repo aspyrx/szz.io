@@ -15,6 +15,9 @@ function getChildPath(path) {
     return index < 0 ? path : path.substring(0, index);
 }
 
+const pageOrder = Object.create(null);
+pages.forEach((module, i) => pageOrder[getChildPath(module.page.path)] = i);
+
 export default class App extends Component {
     static get propTypes() {
         return {
@@ -31,9 +34,6 @@ export default class App extends Component {
         this.state = {
             linkIncrease: false
         }
-
-        this.linkOrder = {};
-        pages.forEach((module, i) => this.linkOrder[getChildPath(module.page.path)] = i);
     }
 
     componentWillReceiveProps(props) {
@@ -44,7 +44,7 @@ export default class App extends Component {
         currPath = getChildPath(currPath);
 
         if (pathname !== currPath) {
-            if (this.linkOrder[pathname] > this.linkOrder[currPath]) {
+            if (pageOrder[pathname] > pageOrder[currPath]) {
                 this.setState({ linkIncrease: true });
             } else {
                 this.setState({ linkIncrease: false });
@@ -76,7 +76,7 @@ export default class App extends Component {
                         toString() { return styles.replaceAnimated; }
                     }}
                     transitionAppear={true}
-                    transitionAppearTimeout={300}
+                    transitionAppearTimeout={750}
                     transitionEnterTimeout={600}
                     transitionLeaveTimeout={300}
                     overflowHidden={false}>

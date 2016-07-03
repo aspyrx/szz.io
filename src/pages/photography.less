@@ -116,7 +116,25 @@
         }
     }
 
-    .replaceAnimated {
+    .transitionAnimated {
+        .appear {
+            opacity: 0.001;
+
+            .image {
+                transform: translate(-50%, -60%);
+            }
+        }
+
+        .appear.appearActive {
+            opacity: 1;
+            transition: opacity @duration-appear;
+
+            .image {
+                transform: translate(-50%, -50%);
+                transition: transform @duration-appear;
+            }
+        }
+
         .enter {
             opacity: 0.001;
 
@@ -125,7 +143,7 @@
             }
         }
 
-        .enterActive {
+        .enter.enterActive {
             opacity: 1;
             transition: opacity @duration-enter-leave;
 
@@ -139,7 +157,7 @@
             opacity: 1;
         }
 
-        .leaveActive {
+        .leave.leaveActive {
             opacity: 0.001;
             transition: opacity @duration-enter-leave;
 
@@ -155,12 +173,15 @@
                 transform: translate(50%, -50%);
             }
 
-            .enterActive .image {
+            .enter.enterActive .image {
                 transform: translate(-50%, -50%);
-                transition: transform @duration-enter-leave;
             }
 
-            .leaveActive .image {
+            .leave .image {
+                transform: translate(-50%, -50%);
+            }
+
+            .leave.leaveActive .image {
                 transform: translate(-150%, -50%);
             }
         }

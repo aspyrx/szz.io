@@ -62,13 +62,16 @@ a {
 
             .replaceAnimated {
                 .appear {
+                    position: relative;
                     opacity: 0.001;
-                    transform: translateY(-@spacing-y);
+
+                    // Can't use transform, otherwise breaks nested fixed elems
+                    top: -@spacing-y;
                 }
 
-                .appearActive {
+                .appear.appearActive {
                     opacity: 1;
-                    transform: none;
+                    top: 0;
                     transition: all @duration-appear;
                 }
 
@@ -77,7 +80,7 @@ a {
                     transform: translateX(-100%);
                 }
 
-                .enterActive {
+                .enter.enterActive {
                     opacity: 1;
                     transform: none;
                     transition: all @duration-enter-leave;
@@ -88,7 +91,7 @@ a {
                     transform: none;
                 }
 
-                .leaveActive {
+                .leave.leaveActive {
                     opacity: 0.001;
                     transform: translateX(100%);
                     transition: all @duration-enter-leave;
@@ -101,13 +104,13 @@ a {
                         transform: translateX(100%);
                     }
 
-                    .enterActive {
+                    .enter.enterActive {
                         opacity: 1;
                         transform: none;
                         transition: all @duration-enter-leave;
                     }
 
-                    .leaveActive {
+                    .leave.leaveActive {
                         transform: translateX(-100%);
                     }
                 }
