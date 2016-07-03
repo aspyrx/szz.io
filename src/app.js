@@ -10,6 +10,11 @@ import '^/octicons/octicons.less';
 
 import bg from '~/images/bg.svg';
 
+function getChildPath(path) {
+    const index = path.indexOf('/', 1);
+    return index < 0 ? path : path.substring(0, index);
+}
+
 export default class App extends Component {
     static get propTypes() {
         return {
@@ -28,14 +33,18 @@ export default class App extends Component {
         }
 
         this.linkOrder = {};
-        pages.map((module, i) => this.linkOrder[module.page.path] = i);
+        pages.forEach((module, i) => this.linkOrder[getChildPath(module.page.path)] = i);
     }
 
     componentWillReceiveProps(props) {
-        const { location: { pathname } } = props;
-        const currPathname = this.props.location.pathname;
-        if (pathname !== currPathname) {
-            if (this.linkOrder[pathname] > this.linkOrder[currPathname]) {
+        let { location: { pathname } } = props;
+        let { location: { pathname: currPath } } = this.props;
+
+        pathname = getChildPath(pathname);
+        currPath = getChildPath(currPath);
+
+        if (pathname !== currPath) {
+            if (this.linkOrder[pathname] > this.linkOrder[currPath]) {
                 this.setState({ linkIncrease: true });
             } else {
                 this.setState({ linkIncrease: false });
@@ -49,8 +58,6 @@ export default class App extends Component {
         const replaceClass = classNames(styles.replaceAnimated, {
             [styles.increase]: linkIncrease
         });
-
-        const childPath = pathname.split('/')[1];
 
         return <div className={styles.containers}>
             <object className={styles.bg} data={bg} type="image/svg+xml" />
@@ -73,7 +80,9 @@ export default class App extends Component {
                     transitionEnterTimeout={600}
                     transitionLeaveTimeout={300}
                     overflowHidden={false}>
-                        {React.cloneElement(children, { key: childPath })}
+                    {React.cloneElement(children, {
+                        key: getChildPath(pathname)
+                    })}
                 </ReactCSSTransitionReplace>
             </div>
         </div>;

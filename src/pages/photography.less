@@ -50,77 +50,118 @@
 
     .photoModal {
         position: fixed;
-        top: -100vh;
-        left: -100vw;
+        top: 0;
+        left: 0;
         height: 100vh;
         width: 100vw;
-        padding: 100vh 100vw;
 
         background-color: @color-bg-modal;
 
-        .modalContent {
+        .image {
             position: absolute;
-            top: 100vh;
-            left: 100vw;
-            height: 100vh;
-            width: 100vw;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
 
-            > a > img {
-                position: absolute;
-                top: 50%;
-                left: 50%;
+            max-width: 80vw;
+            max-height: 80vh;
+            height: auto;
+        }
+
+        @width-clickarea: 10vw;
+
+        > .close {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: @width-clickarea;
+            right: @width-clickarea;
+        }
+
+        > .prev, > .next {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: @width-clickarea;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            transition: all @duration-transition;
+            font-size: 10vw;
+            font-weight: bold;
+            cursor: pointer;
+
+            &:hover, &:active {
+                background-color: @color-bg-modal-active;
+                color: @color-text-active;
+            }
+        }
+
+        > .prev {
+            left: 0;
+
+            &:before {
+                content: '<'
+            }
+        }
+
+        > .next {
+            right: 0;
+
+            &:before {
+                content: '>'
+            }
+        }
+    }
+
+    .replaceAnimated {
+        .enter {
+            opacity: 0.001;
+
+            .image {
+                transform: translate(-150%, -50%);
+            }
+        }
+
+        .enterActive {
+            opacity: 1;
+            transition: opacity @duration-enter-leave;
+
+            .image {
                 transform: translate(-50%, -50%);
+                transition: transform @duration-enter-leave;
+            }
+        }
 
-                max-width: 80vw;
-                max-height: 80vh;
-                height: auto;
+        .leave {
+            opacity: 1;
+        }
+
+        .leaveActive {
+            opacity: 0.001;
+            transition: opacity @duration-enter-leave;
+
+            .image {
+                transform: translate(50%, -50%);
+                transition: transform @duration-enter-leave;
+            }
+        }
+
+
+        &.increase {
+            .enter .image {
+                transform: translate(50%, -50%);
             }
 
-            @width-clickarea: 10vw;
-
-            > .close {
-                position: absolute;
-                top: 0;
-                bottom: 0;
-                left: @width-clickarea;
-                right: @width-clickarea;
+            .enterActive .image {
+                transform: translate(-50%, -50%);
+                transition: transform @duration-enter-leave;
             }
 
-            > .prev, > .next {
-                position: absolute;
-                top: 0;
-                bottom: 0;
-                width: @width-clickarea;
-
-                display: flex;
-                justify-content: center;
-                align-items: center;
-
-                transition: all @duration-transition;
-                font-size: 10vw;
-                font-weight: bold;
-                cursor: pointer;
-
-                &:hover, &:active {
-                    background-color: @color-bg-modal-active;
-                    color: @color-text-active;
-                }
-            }
-
-            > .prev {
-                left: 0;
-
-                &:before {
-                    content: '<'
-                }
-            }
-
-            > .next {
-                right: 0;
-
-                &:before {
-                    content: '>'
-                }
+            .leaveActive .image {
+                transform: translate(-150%, -50%);
             }
         }
     }
