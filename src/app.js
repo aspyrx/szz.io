@@ -14,7 +14,9 @@ export default class App extends Component {
     static get propTypes() {
         return {
             children: React.PropTypes.node.isRequired,
-            location: React.PropTypes.object
+            location: React.PropTypes.shape({
+                pathname: React.PropTypes.string
+            })
         };
     }
 
@@ -48,6 +50,8 @@ export default class App extends Component {
             [styles.increase]: linkIncrease
         });
 
+        const childPath = pathname.split('/')[1];
+
         return <div className={styles.containers}>
             <object className={styles.bg} data={bg} type="image/svg+xml" />
             <div className={styles.container}>
@@ -69,7 +73,7 @@ export default class App extends Component {
                     transitionEnterTimeout={600}
                     transitionLeaveTimeout={300}
                     overflowHidden={false}>
-                        {React.cloneElement(children, { key: pathname })}
+                        {React.cloneElement(children, { key: childPath })}
                 </ReactCSSTransitionReplace>
             </div>
         </div>;

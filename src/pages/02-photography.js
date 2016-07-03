@@ -1,4 +1,6 @@
 import React from 'react';
+import Link from 'react-router/lib/Link';
+import Route from 'react-router/lib/Route';
 import classNames from 'classnames';
 
 import cacheable from '~/components/cacheable';
@@ -8,107 +10,58 @@ import styles from './photography.less';
 const photosCtx = require.context('~/images/photography', false, /\.jpg$/);
 const photos = photosCtx.keys().map(key => photosCtx(key));
 
+const basePath = '/photography';
+
 const Img = cacheable(function img(props) {
     return <img {...props} />;
 });
 
 function Photos(props) {
-    const { onPhotoClick, ...rest } = props;
-    return <div className={styles.photos} {...rest}>
+    return <div className={styles.photos} {...props}>
         {photos.map((photo, i) => {
-            return <div key={i} className={styles.photo}>
-                <Img src={photo}
-                    loadedClass={styles.loaded}
-                    onClick={function onClick(e) {
-                        if (onPhotoClick) {
-                            onPhotoClick(e, photo, i);
-                        }
-                    }}
-                />
-            </div>;
+            return <Link key={i}
+                to={`${basePath}/${i}`}
+                className={styles.photo}>
+                <Img src={photo} loadedClass={styles.loaded} />
+            </Link>;
         })}
     </div>;
 }
 
-Photos.propTypes = {
-    onPhotoClick: React.PropTypes.func
-}
-
 function PhotoModal(props) {
-    const { className, index, setIndex, close, ...rest } = props;
-    const classes = classNames(styles.photoModal, className);
+    let { params: { index } } = props;
+    index = Number(index);
+
     const src = photos[index];
+    const prev = (index === 0 ? photos.length : index) - 1;
+    const next = index === photos.length - 1 ? 0 : index + 1;
 
-    function prev() {
-        setIndex(index - 1);
-    }
-
-    function next() {
-        setIndex(index + 1);
-    }
-
-    return <div className={classes} {...rest}>
-        <div className={styles.prev} onClick={prev} />
-        <div className={styles.close} onClick={close} />
-        <div className={styles.next} onClick={next} />
-        <a href={src} target="_blank"><img src={src} /></a>
+    return <div className={styles.photoModal}>
+        <div className={styles.modalContent}>
+            <Link to={`${basePath}/${prev}`} className={styles.prev} />
+            <Link to={`${basePath}/${next}`} className={styles.next} />
+            <Link to={`${basePath}`} className={styles.close} />
+            <a href={src} target="_blank"><img src={src} /></a>
+        </div>
     </div>;
 }
 
 PhotoModal.propTypes = {
-    className: React.PropTypes.any,
-    index: React.PropTypes.number,
-    setIndex: React.PropTypes.func,
-    close: React.PropTypes.func
+    params: React.PropTypes.shape({
+        index: React.PropTypes.string
+    })
 }
 
 export default class Photography extends React.Component {
-    constructor() {
-        super();
-
-        this.state = {};
-    }
-
     render() {
-        const setPhotoModalIndex = function setPhotoModalIndex(i) {
-            const { photoModalIndex } = this.state;
-            const photoModalIncrease = i > photoModalIndex;
-            if (i < 0) {
-                i = photos.length - 1;
-            } else if (i >= photos.length) {
-                i = 0;
-            }
-
-            this.setState({ photoModalIndex: i, photoModalIncrease });
-        }.bind(this);
-
-        const onPhotoClick = function onPhotoClick(e, photo, i) {
-            setPhotoModalIndex(i);
-            this.setState({ photoModalShowing: true });
-        }.bind(this);
-
-        const photoModalClose = function photoModalClose() {
-            this.setState({ photoModalShowing: false });
-        }.bind(this);
-
-
         const {
-            photoModalShowing, photoModalIndex, photoModalIncrease
-        } = this.state;
-
-        const photoModalClass = classNames({
-            [styles.increase]: photoModalIncrease
-        });
-
-        const { className, ...rest } = this.props;
+            className, location: { pathname }, children, ...rest
+        } = this.props;
 
         return <div className={classNames(className, styles.photography)} {...rest}>
-            <Photos onPhotoClick={onPhotoClick} />
-            {photoModalShowing
-                ? <PhotoModal className={photoModalClass}
-                    index={photoModalIndex}
-                    close={photoModalClose}
-                    setIndex={setPhotoModalIndex} />
+            <Photos />
+            {children
+                ? React.cloneElement(children, { key: pathname })
                 : null
             }
         </div>;
@@ -116,11 +69,16 @@ export default class Photography extends React.Component {
 }
 
 Photography.propTypes = {
-    className: React.PropTypes.any
+    className: React.PropTypes.any,
+    location: React.PropTypes.shape({
+        pathname: React.PropTypes.string
+    }),
+    children: React.PropTypes.node
 }
 
 export const page = {
-    path: '/photography',
-    title: 'photography'
+    path: basePath,
+    title: 'photography',
+    routes: <Route path={`${basePath}/:index`} component={PhotoModal} />
 };
 

@@ -18,6 +18,7 @@ module.exports = {
     },
     output: {
         path: outDir,
+        publicPath: '/',
         filename: 'app.[hash].js'
     },
     resolve: {

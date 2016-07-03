@@ -50,74 +50,77 @@
 
     .photoModal {
         position: fixed;
-        top: 0;
-        left: 0;
+        top: -100vh;
+        left: -100vw;
         height: 100vh;
         width: 100vw;
+        padding: 100vh 100vw;
 
         background-color: @color-bg-modal;
 
-        animation: photoModalAppear @duration-enter-leave both;
-
-        @keyframes photoModalAppear {
-            0% { opacity: 0; }
-        }
-
-        > a > img {
+        .modalContent {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            top: 100vh;
+            left: 100vw;
+            height: 100vh;
+            width: 100vw;
 
-            max-width: 80vw;
-            max-height: 80vh;
-            height: auto;
-        }
+            > a > img {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
 
-        @width-clickarea: 10vw;
-
-        > .close {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: @width-clickarea;
-            right: @width-clickarea;
-        }
-
-        > .prev, > .next {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            width: @width-clickarea;
-
-            display: flex;
-            justify-content: center;
-            align-items: center;
-
-            transition: all @duration-transition;
-            font-size: 10vw;
-            font-weight: bold;
-            cursor: pointer;
-
-            &:hover, &:active {
-                background-color: @color-bg-modal-active;
-                color: @color-text-active;
+                max-width: 80vw;
+                max-height: 80vh;
+                height: auto;
             }
-        }
 
-        > .prev {
-            left: 0;
+            @width-clickarea: 10vw;
 
-            &:before {
-                content: '<'
+            > .close {
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: @width-clickarea;
+                right: @width-clickarea;
             }
-        }
 
-        > .next {
-            right: 0;
+            > .prev, > .next {
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                width: @width-clickarea;
 
-            &:before {
-                content: '>'
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                transition: all @duration-transition;
+                font-size: 10vw;
+                font-weight: bold;
+                cursor: pointer;
+
+                &:hover, &:active {
+                    background-color: @color-bg-modal-active;
+                    color: @color-text-active;
+                }
+            }
+
+            > .prev {
+                left: 0;
+
+                &:before {
+                    content: '<'
+                }
+            }
+
+            > .next {
+                right: 0;
+
+                &:before {
+                    content: '>'
+                }
             }
         }
     }
