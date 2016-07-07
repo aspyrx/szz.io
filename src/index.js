@@ -12,15 +12,17 @@ import browserHistory from 'react-router/lib/browserHistory';
 import App from '~/app';
 import pages from '~/pages';
 
-render(<Router history={browserHistory}>
-    <Route path="/" component={App}>
-        <IndexRedirect to={pages.indexPath} />
-        {pages.map((module, i) => {
-            const { default: Page, page: { path, routes } } = module;
-            return <Route key={i} path={path} component={Page}>
-                {routes}
-            </Route>;
-        })}
-    </Route>
-</Router>, document.getElementById("app"));
+export function renderApp(elem, done) {
+    render(<Router history={browserHistory}>
+        <Route path="/" component={App}>
+            <IndexRedirect to={pages.indexPath} />
+            {pages.map((module, i) => {
+                const { default: Page, page: { path, routes } } = module;
+                return <Route key={i} path={path} component={Page}>
+                    {routes}
+                </Route>;
+            })}
+        </Route>
+    </Router>, elem, done);
+}
 

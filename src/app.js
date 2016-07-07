@@ -8,8 +8,6 @@ import styles from './app.less'
 import 'normalize-css/normalize.css';
 import '^/octicons/octicons.less';
 
-import bg from '~/images/bg.svg';
-
 function getChildPath(path) {
     const index = path.indexOf('/', 1);
     return index < 0 ? path : path.substring(0, index);
@@ -60,7 +58,6 @@ export default class App extends Component {
         });
 
         return <div className={styles.containers}>
-            <object className={styles.bg} data={bg} type="image/svg+xml" />
             <div className={styles.container}>
                 <Header pages={pages} />
             </div>

@@ -1,0 +1,54 @@
+.bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    min-width: 100vw;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+.spinner {
+    @size-spinner: 10vw;
+    @stroke-width-logo: 0.05 * @size-spinner;
+    @color-primary: #05FFC0;
+
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+
+    .logoS {
+        display: inline-block;
+        position: relative;
+        width: @size-spinner;
+        height: @size-spinner;
+        animation: preloaderSpinner 1s infinite both;
+
+        @keyframes preloaderSpinner {
+            0% { transform: rotate(-360deg); }
+        }
+
+        .round {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            border: @stroke-width-logo solid;
+            border-color: @color-primary transparent;
+            border-radius: 50%;
+        }
+
+        .line {
+            position: absolute;
+            height: @stroke-width-logo;
+            width: 100%;
+            top: calc(~"50%" - (@stroke-width-logo / 2));
+            transform: rotate(45deg);
+            background-color: @color-primary;
+            border-radius: @stroke-width-logo / 2;
+        }
+    }
+}
+

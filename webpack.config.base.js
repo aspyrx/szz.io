@@ -2,6 +2,7 @@
 
 const path = require('path');
 const autoprefixer = require('autoprefixer');
+const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const ctxDir = path.resolve(__dirname);
@@ -14,12 +15,13 @@ module.exports = {
     debug: true,
     context: ctxDir,
     entry: {
+        preloader: [path.resolve(srcDir, 'preloader')],
         app: [srcDir]
     },
     output: {
         path: outDir,
         publicPath: '/',
-        filename: 'app.[hash].js'
+        filename: '[name].[hash].js'
     },
     resolve: {
         alias: {
@@ -83,6 +85,7 @@ module.exports = {
         ]
     },
     plugins: [
+        new webpack.optimize.CommonsChunkPlugin('commons.[hash].js'),
         new HtmlWebpackPlugin({
             template: 'src/index.html',
             favicon: 'src/images/favicon.ico'
