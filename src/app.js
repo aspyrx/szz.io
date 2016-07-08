@@ -1,6 +1,12 @@
 import React, {Component} from 'react';
+import {render} from 'react-dom';
+import Router from 'react-router/lib/Router';
+import Route from 'react-router/lib/Route';
+import IndexRedirect from 'react-router/lib/IndexRedirect';
+import browserHistory from 'react-router/lib/browserHistory';
 import ReactCSSTransitionReplace from 'react-css-transition-replace';
 import classNames from 'classnames';
+
 import pages from '~/pages';
 import Header from '~/components/header';
 
@@ -16,7 +22,7 @@ function getChildPath(path) {
 const pageOrder = Object.create(null);
 pages.forEach((module, i) => pageOrder[getChildPath(module.page.path)] = i);
 
-export default class App extends Component {
+class App extends Component {
     static get propTypes() {
         return {
             children: React.PropTypes.node.isRequired,
@@ -84,5 +90,19 @@ export default class App extends Component {
             </div>
         </div>;
     }
+}
+
+export default function renderApp(elem, done) {
+    render(<Router history={browserHistory}>
+        <Route path="/" component={App}>
+            <IndexRedirect to={pages.indexPath} />
+            {pages.map((module, i) => {
+                const { default: Page, page: { path, routes } } = module;
+                return <Route key={i} path={path} component={Page}>
+                    {routes}
+                </Route>;
+            })}
+        </Route>
+    </Router>, elem, done);
 }
 

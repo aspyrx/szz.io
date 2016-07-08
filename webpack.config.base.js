@@ -15,8 +15,7 @@ module.exports = {
     debug: true,
     context: ctxDir,
     entry: {
-        preloader: [path.resolve(srcDir, 'preloader')],
-        app: [srcDir]
+        app: srcDir
     },
     output: {
         path: outDir,

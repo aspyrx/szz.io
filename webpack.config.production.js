@@ -29,7 +29,7 @@ if (!config.plugins) {
     config.plugins = [];
 }
 
-config.plugins.push(
+config.plugins.unshift(
     new CleanWebpackPlugin(['dist']),
     new webpack.optimize.UglifyJsPlugin(),
     new webpack.optimize.OccurrenceOrderPlugin(),
@@ -39,7 +39,7 @@ config.plugins.push(
             'NODE_ENV': JSON.stringify('production')
         }
     }),
-    new ExtractTextPlugin('[hash].min.css', {allChunks: true})
+    new ExtractTextPlugin('[name].[hash].css', {allChunks: true})
 );
 
 module.exports = config;
