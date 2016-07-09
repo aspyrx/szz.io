@@ -15,7 +15,7 @@ module.exports = {
     debug: true,
     context: ctxDir,
     entry: {
-        app: srcDir
+        app: [srcDir]
     },
     output: {
         path: outDir,
