@@ -39,8 +39,12 @@ appDiv.id = 'app';
 require.ensure(['~/app'], function bundleLoaded(require) {
     const renderApp = require('~/app').default;
     renderApp(appDiv, function onAppRender() {
-        spinner.parentElement.removeChild(spinner);
+        spinner.classList.add(styles.loaded);
         document.body.appendChild(appDiv);
+
+        setTimeout(function removeSpinner() {
+            spinner.parentElement.removeChild(spinner);
+        }, 500);
     });
 });
 

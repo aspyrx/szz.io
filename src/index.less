@@ -18,13 +18,27 @@
     transform: translate(-50%, -50%);
     border-radius: 50%;
 
+    animation: preloaderSpinnerAppear 0.5s both;
+
+    @keyframes preloaderSpinnerAppear {
+        0% { opacity: 0; }
+    }
+
+    &.loaded {
+        animation: preloaderSpinnerLoaded 0.5s both;
+
+        @keyframes preloaderSpinnerLoaded {
+            100% { opacity: 0 }
+        }
+    }
+
     .logoS {
         display: inline-block;
         position: relative;
         width: @size-spinner;
         height: @size-spinner;
         animation-fill-mode: both;
-        animation: preloaderSpinner 1s ease-in, preloaderSpinner 0.5s linear 1s infinite;
+        animation: preloaderSpinner 0.5s ease-in, preloaderSpinner 0.5s linear 0.5s infinite;
 
         @keyframes preloaderSpinner {
             0% { transform: rotate(-360deg); }
@@ -46,9 +60,9 @@
             height: @stroke-width-logo;
             width: 100%;
             top: calc(~"50%" - (@stroke-width-logo / 2));
-            transform: rotate(45deg);
             background-color: @color-primary;
             border-radius: @stroke-width-logo / 2;
+            transform: rotate(45deg);
         }
     }
 }
