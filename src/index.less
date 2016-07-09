@@ -21,14 +21,14 @@
     animation: preloaderSpinnerAppear 0.5s both;
 
     @keyframes preloaderSpinnerAppear {
-        0% { opacity: 0; }
+        0% { opacity: 0; transform: translate(-50%, -50%) scale(0.9, 0.9); }
     }
 
     &.loaded {
         animation: preloaderSpinnerLoaded 0.5s both;
 
         @keyframes preloaderSpinnerLoaded {
-            100% { opacity: 0 }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(1.1, 1.1); }
         }
     }
 
