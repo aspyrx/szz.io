@@ -23,7 +23,8 @@
         position: relative;
         width: @size-spinner;
         height: @size-spinner;
-        animation: preloaderSpinner 1s infinite both;
+        animation-fill-mode: both;
+        animation: preloaderSpinner 1s ease-in, preloaderSpinner 0.5s linear 1s infinite;
 
         @keyframes preloaderSpinner {
             0% { transform: rotate(-360deg); }
