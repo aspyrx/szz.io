@@ -40,7 +40,9 @@ if (process.argv[2] === 'watch') {
     return;
 } else if (process.argv[2] === 'live') {
     const webpackDevServer = require('webpack-dev-server');
-    webpackConfig.entry.app.push('webpack-dev-server/client?https:///', 'webpack/hot/dev-server');
+    Object.keys(webpackConfig.entry).forEach(function entries(key) {
+        webpackConfig.entry[key].push('webpack-dev-server/client?https:///', 'webpack/hot/dev-server');
+    });
     webpackConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
     const server = new webpackDevServer(webpackCompiler, {
         hot: true,

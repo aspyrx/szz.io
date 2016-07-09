@@ -15,12 +15,14 @@ module.exports = {
     debug: true,
     context: ctxDir,
     entry: {
-        app: [srcDir]
+        main: [srcDir],
+        app: [path.resolve(srcDir, 'app')]
     },
     output: {
         path: outDir,
         publicPath: '/',
-        filename: '[name].[hash].js'
+        filename: '[name].[hash].bundle.js',
+        chunkFilename: '[name].[hash].chunk.js'
     },
     resolve: {
         alias: {

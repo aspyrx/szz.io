@@ -92,7 +92,8 @@ class App extends Component {
     }
 }
 
-export default function renderApp(elem, done) {
+const bundleLoadedEvent = new Event('appBundleLoaded');
+bundleLoadedEvent.renderApp = function renderApp(elem, done) {
     render(<Router history={browserHistory}>
         <Route path="/" component={App}>
             <IndexRedirect to={pages.indexPath} />
@@ -104,5 +105,7 @@ export default function renderApp(elem, done) {
             })}
         </Route>
     </Router>, elem, done);
-}
+};
+
+window.dispatchEvent(bundleLoadedEvent);
 

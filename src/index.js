@@ -2,6 +2,7 @@ import styles from './index.less';
 
 import backgroundData from '~/images/bg.svg';
 
+
 (function background(parent) {
     const elem = document.createElement('object');
     elem.classList.add(styles.bg);
@@ -36,9 +37,8 @@ document.body.appendChild(spinner);
 const appDiv = document.createElement('div');
 appDiv.id = 'app';
 
-require.ensure(['~/app'], function bundleLoaded(require) {
-    const renderApp = require('~/app').default;
-    renderApp(appDiv, function onAppRender() {
+window.addEventListener('appBundleLoaded', function onAppBundleLoaded(event) {
+    event.renderApp(appDiv, function onAppRender() {
         spinner.classList.add(styles.loaded);
         document.body.appendChild(appDiv);
 
