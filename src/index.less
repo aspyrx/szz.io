@@ -17,23 +17,23 @@
     left: 50%;
     transform: translate(-50%, -50%);
     border-radius: 50%;
+    opacity: 0;
 
     @duration-appear: 0.5s;
 
-    animation: preloaderSpinnerAppear @duration-appear both;
+    animation: preloaderSpinnerAppear @duration-appear both ease-in;
 
     @keyframes preloaderSpinnerAppear {
-        0% { opacity: 0; transform: translate(-50%, -50%) scale(0.9, 0.9); }
+        0% { transform: translate(-50%, -50%) scale(0.9, 0.9); }
+        100% { opacity: 1; }
     }
 
     &.loaded {
         @duration-loaded: 0.5s;
-
-        animation: preloaderSpinnerLoaded @duration-loaded both;
-
-        @keyframes preloaderSpinnerLoaded {
-            100% { opacity: 0; transform: translate(-50%, -50%) scale(1.1, 1.1); }
-        }
+        animation: none;
+        transition: all @duration-loaded ease-out;
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1.1, 1.1);
 
         .logoS {
             animation: none;
