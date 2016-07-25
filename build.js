@@ -22,21 +22,25 @@ const webpackBuildFinished = (err, stats) => {
     }
 };
 
-const webpackCompiler = webpack(webpackConfig);
-const webpackProgress = new ProgressBar(
-    '[:bar] :percent eta :etas  :msg', {
-        total: 100, complete: '=', incomplete: ' ', width: 10
-    }
-);
+function webpackCompiler() {
+    const compiler = webpack(webpackConfig);
+    const webpackProgress = new ProgressBar(
+        '[:bar] :percent eta :etas  :msg', {
+            total: 100, complete: '=', incomplete: ' ', width: 10
+        }
+    );
 
-let webpackPrevPercent = 0;
-webpackCompiler.apply(new ProgressPlugin((percent, msg) => {
-    webpackProgress.tick((percent - webpackPrevPercent) * 100, { 'msg': msg });
-    webpackPrevPercent = percent;
-}));
+    let webpackPrevPercent = 0;
+    compiler.apply(new ProgressPlugin((percent, msg) => {
+        webpackProgress.tick((percent - webpackPrevPercent) * 100, { 'msg': msg });
+        webpackPrevPercent = percent;
+    }));
+
+    return compiler;
+}
 
 if (process.argv[2] === 'watch') {
-    webpackCompiler.watch({}, webpackBuildFinished);
+    webpackCompiler().watch({}, webpackBuildFinished);
     return;
 } else if (process.argv[2] === 'live') {
     const webpackDevServer = require('webpack-dev-server');
@@ -44,7 +48,16 @@ if (process.argv[2] === 'watch') {
         webpackConfig.entry[key].push('webpack-dev-server/client?https:///', 'webpack/hot/dev-server');
     });
     webpackConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
-    const server = new webpackDevServer(webpackCompiler, {
+    webpackConfig.module.loaders.forEach(function loaders(l) {
+        if (l.loaders && l.loaders[0] === 'babel') {
+            l.loaders.unshift('react-hot');
+        } else if (l.loader === 'babel') {
+            l.loaders = ['react-hot', 'babel'];
+            delete l.loader
+        }
+    });
+
+    const server = new webpackDevServer(webpackCompiler(), {
         hot: true,
         https: true,
         compress: true,
@@ -55,5 +68,5 @@ if (process.argv[2] === 'watch') {
     return;
 }
 
-webpackCompiler.run(webpackBuildFinished);
+webpackCompiler().run(webpackBuildFinished);
 

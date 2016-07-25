@@ -14,7 +14,7 @@ if (!config.module) {
 
 // Use ExtractTextPlugin on any loader that uses style-loader
 if (config.module.loaders) {
-    for (const l of config.module.loaders) {
+    config.module.loaders.forEach(function extract(l) {
         if (l.loader === 'style') {
             l.loader = ExtractTextPlugin.extract('style');
             delete l.loaders;
@@ -22,7 +22,7 @@ if (config.module.loaders) {
             l.loader = ExtractTextPlugin.extract('style', l.loaders.slice(1));
             delete l.loaders;
         }
-    }
+    });
 }
 
 if (!config.resolve) {

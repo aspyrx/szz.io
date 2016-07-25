@@ -42,8 +42,8 @@ function Bio(props) {
 }
 
 export default function Home(props) {
-    const { className, ...rest } = props;
-    return <div className={classNames(className, styles.home)} {...rest}>
+    const { className } = props;
+    return <div className={classNames(className, styles.home)}>
         <Bio />
     </div>;
 }
