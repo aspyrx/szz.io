@@ -1,4 +1,5 @@
 import React from 'react';
+import { string } from 'prop-types';
 import classNames from 'classnames';
 
 const cached = Object.create(null);
@@ -7,10 +8,10 @@ export default function cacheable(Component) {
     return class CacheableComponent extends React.Component {
         static get propTypes() {
             return {
-                className: React.PropTypes.any,
-                loadedClass: React.PropTypes.any,
-                src: React.PropTypes.string
-            }
+                className: string,
+                loadedClass: string,
+                src: string
+            };
         }
 
         constructor(props) {
@@ -29,7 +30,7 @@ export default function cacheable(Component) {
                     cached[src] = true;
                     this.setState({ loaded: true });
                 }
-            }
+            };
 
             const { loaded } = this.state;
             const classes = classNames(className, { [loadedClass]: loaded });
@@ -37,7 +38,8 @@ export default function cacheable(Component) {
             return <Component onLoad={onLoad}
                 className={classes}
                 src={src}
-                {...rest} />
+                {...rest} />;
         }
-    }
+    };
 }
+

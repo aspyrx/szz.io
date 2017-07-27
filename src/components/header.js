@@ -1,13 +1,16 @@
 import React from 'react';
-import Link from 'react-router/lib/Link';
+import { string, shape } from 'prop-types';
+import { Link, NavLink }  from 'react-router-dom';
 
 import styles from './header.less';
+
+import routeConfig from '~/routeConfig';
 
 function LogoS() {
     return <div className={styles.logoS}>
         <div className={styles.round} />
         <div className={styles.line} />
-    </div>
+    </div>;
 }
 
 function Logo() {
@@ -19,32 +22,36 @@ function Logo() {
     </div>;
 }
 
-export default function Header(props) {
-    const { pages } = props;
-    return <div className={styles.header}>
-        <Link to="/home"><Logo /></Link>
-        <div className={styles.navigation}>
-            {pages.map((module, i) => {
-                const { page: { path, title } } = module;
-                return <Link key={i}
-                    to={path}
-                    activeClassName={styles.active}>
-                    {title}
-                </Link>;
-            })}
-        </div>
-    </div>;
+function HeaderLink(props) {
+    const { path, title } = props.config;
+    return <NavLink key={path}
+        to={path}
+        activeClassName={styles.active}
+    >
+        {title}
+    </NavLink>;
 }
 
-const { arrayOf, shape, string } = React.PropTypes;
-Header.propTypes = {
-    pages: arrayOf(shape({
-        module: shape({
-            page: shape({
-                path: string,
-                title: string
-            })
-        })
-    })).isRequired
+HeaderLink.propTypes = {
+    config: shape({
+        path: string.isRequired,
+        title: string.isRequired
+    }).isRequired
+};
+
+function renderNav(parent, children) {
+    return Object.keys(children).map(name => {
+        const config = children[name];
+        return <HeaderLink key={config.path} config={config} />;
+    });
+}
+
+export default function Header() {
+    return <div className={styles.header}>
+        <Link to='/'><Logo /></Link>
+        <div className={styles.navigation}>
+            {renderNav('', routeConfig.children)}
+        </div>
+    </div>;
 }
 

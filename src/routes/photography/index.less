@@ -1,13 +1,13 @@
-@import '~base';
+@import '~components/base';
 
 .photography {
-    .photos {
+    .thumbnails {
         display: flex;
         flex-flow: row wrap;
         justify-content: center;
         align-items: center;
 
-        .photo {
+        .thumbnail {
             position: relative;
             flex: 1 0 @width-container-max / 4;
             max-width: @width-container-max / 3;
@@ -36,7 +36,7 @@
                 width: auto;
                 transform: translate(-50%, -50%);
 
-                box-shadow: 0px 0px @blur-shadow @spread-shadow @color-shadow;
+                box-shadow: @box-shadow;
 
                 transition: opacity @duration-transition;
                 opacity: 0;
