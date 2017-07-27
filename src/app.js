@@ -10,6 +10,7 @@ import { routes } from '~/routeConfig';
 import Header from '~/components/header';
 
 import styles from './app.less';
+import '^/roboto/roboto.css';
 import '^/octicons/octicons.less';
 
 const asyncNotFound = asyncComponent(Spinner, NotFound);
