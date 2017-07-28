@@ -1,11 +1,26 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Route, Link, Redirect } from 'react-router-dom';
-import { string, shape } from 'prop-types';
+import { string, object, shape } from 'prop-types';
+import classNames from 'classnames';
 
+import TransitionReplace from '~/components/TransitionReplace';
 import Anchor from '~/components/Anchor';
 import cacheable from '~/components/cacheable';
 
 import styles from './index.less';
+
+const previewTransition = {
+    className: styles.transitionReplace,
+    fromRightName: styles.fromRight,
+    transitionName: [
+        'appear', 'appearActive',
+        'enter', 'enterActive',
+        'leave', 'leaveActive'
+    ].reduce((memo, key) => {
+        memo[key] = styles[key];
+        return memo;
+    }, {})
+};
 
 function getFilename(path) {
     return path.substring(path.lastIndexOf('/') + 1);
@@ -45,7 +60,7 @@ function Thumbnails() {
 }
 
 function PhotoPreview(props) {
-    const { filename } = props.match.params;
+    const { filename, className } = props;
     const photo = photosMap[filename];
     if (!photo) {
         return <Redirect to='/photography/' />;
@@ -67,7 +82,8 @@ function PhotoPreview(props) {
         />
         : null;
 
-    return <div className={styles.photoPreview}>
+    const classes = classNames(className, styles.photoPreview);
+    return <div className={classes}>
         <Link to='/photography/' className={styles.close} />
         <Anchor href={url}>
             <img src={url} className={styles.image} />
@@ -78,12 +94,58 @@ function PhotoPreview(props) {
 }
 
 PhotoPreview.propTypes = {
-    match: shape({
-        params: shape({
-            filename: string.isRequired
-        }).isRequired
-    }).isRequired
+    className: string,
+    filename: string.isRequired
 };
+
+class TransitionPreviews extends Component {
+    static get propTypes() {
+        return {
+            match: shape({
+                params: shape({
+                    filename: string.isRequired
+                }).isRequired
+            }).isRequired,
+            location: object.isRequired
+        };
+    }
+
+    constructor() {
+        super();
+        this.state = {
+            fromRight: false
+        };
+    }
+
+    componentWillReceiveProps(nextProps) {
+        const { filename: nextFilename } = nextProps.match.params;
+        const { filename } = this.props.match.params;
+        if (filename === nextFilename) {
+            return;
+        }
+
+        const { index: nextIndex } = photosMap[nextFilename];
+        const { index } = photosMap[filename];
+        const nextFromRight = nextIndex > index;
+        const { fromRight } = this.state;
+
+        if (nextFromRight !== fromRight) {
+            this.setState({ fromRight: nextFromRight });
+        }
+    }
+
+    render() {
+        const { filename } = this.props.match.params;
+        const { fromRight } = this.state;
+
+        return <TransitionReplace
+            {...previewTransition}
+            fromRight={fromRight}
+        >
+            <PhotoPreview key={filename} filename={filename} />
+        </TransitionReplace>;
+    }
+}
 
 export default class Photography extends React.Component {
     render() {
@@ -91,7 +153,7 @@ export default class Photography extends React.Component {
             <Thumbnails />
             <Route
                 path='/photography/preview/:filename'
-                component={PhotoPreview}
+                component={TransitionPreviews}
             />
         </section>;
     }

@@ -1,20 +1,17 @@
 import React from 'react';
-import { bool, element } from 'prop-types';
+import { bool, string, element } from 'prop-types';
 import CSSTransitionReplace from 'react-css-transition-replace';
 import classNames from 'classnames';
 
 import styles from './TransitionReplace.less';
 
 export default function TransitionReplace(props) {
-    const { children, fromRight, ...rest } = props;
-    const className = classNames(styles.transitionReplace, {
-        [styles.fromRight]: fromRight
+    const { children, className, fromRight, fromRightName, ...rest } = props;
+    const classes = classNames(className, {
+        [fromRightName]: fromRight
     });
 
-    return <CSSTransitionReplace
-        className={className}
-        {...rest}
-    >
+    return <CSSTransitionReplace className={classes} {...rest}>
         {children}
     </CSSTransitionReplace>;
 }
@@ -32,11 +29,15 @@ TransitionReplace.defaultProps = {
     ].reduce((memo, key) => {
         memo[key] = styles[key];
         return memo;
-    }, {})
+    }, {}),
+    className: styles.transitionReplace,
+    fromRightName: styles.fromRight
 };
 
 TransitionReplace.propTypes = {
     children: element,
-    fromRight: bool
+    className: string,
+    fromRight: bool,
+    fromRightName: string
 };
 

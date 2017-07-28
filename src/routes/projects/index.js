@@ -64,8 +64,8 @@ export default function Projects() {
     const projectElems = projects.map((project, i) => {
         return <Project key={i} project={project} />;
     });
-    return <div className={styles.projects}>
+    return <nav className={styles.projects}>
         {projectElems}
-    </div>;
+    </nav>;
 }
 

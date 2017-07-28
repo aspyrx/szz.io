@@ -66,13 +66,12 @@ class TransitionRoutes extends Component {
     componentWillReceiveProps(nextProps) {
         const { key: nextKey = '' } = nextProps.match.params;
         const { key = '' } = this.props.match.params;
-        const { fromRight } = this.state;
-
         if (key === nextKey) {
             return;
         }
 
         const nextFromRight = locationsIndex[nextKey] > locationsIndex[key];
+        const { fromRight } = this.state;
         if (nextFromRight !== fromRight) {
             this.setState({ fromRight: nextFromRight });
         }
@@ -83,13 +82,16 @@ class TransitionRoutes extends Component {
         const { fromRight } = this.state;
         const { key = '' } = match.params;
 
-        return <TransitionReplace fromRight={fromRight}>
-            <main key={key}>
+        return <TransitionReplace
+            component='main'
+            fromRight={fromRight}
+        >
+            <div key={key}>
                 <Switch location={location}>
                     { routes }
                     <Route component={asyncNotFound} />
                 </Switch>
-            </main>
+            </div>
         </TransitionReplace>;
     }
 }

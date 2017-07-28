@@ -116,7 +116,7 @@
         }
     }
 
-    .transitionAnimated {
+    .transitionReplace {
         .appear {
             opacity: 0.001;
 
@@ -153,11 +153,11 @@
             }
         }
 
-        .exit {
+        .leave {
             opacity: 1;
         }
 
-        .exit.exitActive {
+        .leave.leaveActive {
             opacity: 0.001;
             transition: opacity @duration-exit;
 
@@ -167,7 +167,7 @@
             }
         }
 
-        &.increase {
+        &.fromRight {
             .enter .image {
                 transform: translate(50%, -50%);
             }
@@ -176,11 +176,11 @@
                 transform: translate(-50%, -50%);
             }
 
-            .exit .image {
+            .leave .image {
                 transform: translate(-50%, -50%);
             }
 
-            .exit.exitActive .image {
+            .leave.leaveActive .image {
                 transform: translate(-150%, -50%);
             }
         }
