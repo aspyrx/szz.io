@@ -1,6 +1,3 @@
-import React from 'react';
-import { Route } from 'react-router-dom';
-
 import asyncComponent from '~/components/async-component';
 import Spinner from '~/components/Spinner';
 
@@ -51,16 +48,5 @@ const routeConfigFlat = routeConfigCtx.keys()
     .map(configure)
     .sort((a, b) => b.path.length - a.path.length);
 
-const routes = routeConfigFlat.map((config, i) => {
-    const { path, component } = config;
-    return <Route
-        key={i}
-        path={path}
-        exact={path === '/'}
-        strict
-        component={component}
-    />;
-});
-
-export { routeConfig as default, routes };
+export { routeConfig as default, routeConfigFlat };
 

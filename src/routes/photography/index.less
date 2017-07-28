@@ -145,25 +145,25 @@
 
         .enter.enterActive {
             opacity: 1;
-            transition: opacity @duration-enter-leave;
+            transition: opacity @duration-enter;
 
             .image {
                 transform: translate(-50%, -50%);
-                transition: transform @duration-enter-leave;
+                transition: transform @duration-enter;
             }
         }
 
-        .leave {
+        .exit {
             opacity: 1;
         }
 
-        .leave.leaveActive {
+        .exit.exitActive {
             opacity: 0.001;
-            transition: opacity @duration-enter-leave;
+            transition: opacity @duration-exit;
 
             .image {
                 transform: translate(50%, -50%);
-                transition: transform @duration-enter-leave;
+                transition: transform @duration-exit;
             }
         }
 
@@ -176,11 +176,11 @@
                 transform: translate(-50%, -50%);
             }
 
-            .leave .image {
+            .exit .image {
                 transform: translate(-50%, -50%);
             }
 
-            .leave.leaveActive .image {
+            .exit.exitActive .image {
                 transform: translate(-150%, -50%);
             }
         }

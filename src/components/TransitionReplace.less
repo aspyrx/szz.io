@@ -1,0 +1,57 @@
+@import '~components/base';
+
+.transitionReplace {
+    .appear {
+        position: relative;
+        opacity: 0.001;
+
+        // Can't use transform, otherwise breaks nested fixed elems
+        top: -@spacing-y;
+
+        &.appearActive {
+            opacity: 1;
+            top: 0;
+            transition: all @duration-appear;
+        }
+    }
+
+    .enter {
+        opacity: 0.001;
+        transform: translateX(-100%);
+
+        &.enterActive {
+            opacity: 1;
+            transform: none;
+            transition: all @duration-enter;
+        }
+    }
+
+    .leave {
+        opacity: 1;
+        transform: none;
+
+        &.leaveActive {
+            opacity: 0.001;
+            transform: translateX(100%);
+            transition: all @duration-exit;
+        }
+    }
+
+    &.fromRight {
+        .enter {
+            opacity: 0.001;
+            transform: translateX(100%);
+
+            &.enterActive {
+                opacity: 1;
+                transform: none;
+                transition: all @duration-enter;
+            }
+        }
+
+        .leave.leaveActive {
+            transform: translateX(-100%);
+        }
+    }
+}
+
