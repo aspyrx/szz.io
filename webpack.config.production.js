@@ -33,6 +33,18 @@ if (config.module.rules) {
     }
 }
 
+
+if (!config.resolve) {
+    config.resolve = {};
+}
+
+if (!config.resolve.alias) {
+    config.resolve.alias = {};
+}
+
+config.resolve.alias['react'] = 'react-lite';
+config.resolve.alias['react-dom'] = 'react-lite';
+
 if (!config.plugins) {
     config.plugins = [];
 }
