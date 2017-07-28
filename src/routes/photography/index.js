@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Link } from 'react-router-dom';
+import { Route, Link, Redirect } from 'react-router-dom';
 import { string, shape } from 'prop-types';
 
 import Anchor from '~/components/Anchor';
@@ -30,35 +30,45 @@ const Img = cacheable(function img(props) {
 function Thumbnails() {
     const thumbs = photos.map(photo => {
         const { filename, url } = photo;
-        return <Link key={filename}
-            to={`./${filename}`}
-            className={styles.thumbnail}>
+        return <Link
+            key={filename}
+            to={`./preview/${filename}`}
+            className={styles.thumbnail}
+        >
             <Img src={url} loadedClass={styles.loaded} />
         </Link>;
     });
 
-    return <div className={styles.thumbnails}>
+    return <nav className={styles.thumbnails}>
         {thumbs}
-    </div>;
+    </nav>;
 }
 
-function PhotoModal(props) {
-    let { filename } = props.match.params;
+function PhotoPreview(props) {
+    const { filename } = props.match.params;
+    const photo = photosMap[filename];
+    if (!photo) {
+        return <Redirect to='/photography/' />;
+    }
 
-    const { index, url } = photosMap[filename];
+    const { index, url } = photo;
 
     const next = index > 0
-        ? <Link className={styles.prev}
-            to={`./${photos[index - 1].filename}`} />
+        ? <Link
+            className={styles.prev}
+            to={`./${photos[index - 1].filename}`}
+        />
         : null;
 
     const prev = index < photos.length - 1
-        ? <Link className={styles.next}
-            to={`./${photos[index + 1].filename}`} />
+        ? <Link
+            className={styles.next}
+            to={`./${photos[index + 1].filename}`}
+        />
         : null;
 
-    return <div className={styles.photoModal}>
-        <Link to='../' className={styles.close} />
+    return <div className={styles.photoPreview}>
+        <Link to='/photography/' className={styles.close} />
         <Anchor href={url}>
             <img src={url} className={styles.image} />
         </Anchor>
@@ -67,7 +77,7 @@ function PhotoModal(props) {
     </div>;
 }
 
-PhotoModal.propTypes = {
+PhotoPreview.propTypes = {
     match: shape({
         params: shape({
             filename: string.isRequired
@@ -77,10 +87,13 @@ PhotoModal.propTypes = {
 
 export default class Photography extends React.Component {
     render() {
-        return <div className={styles.photography}>
+        return <section className={styles.photography}>
             <Thumbnails />
-            <Route path='/photography/:filename' component={PhotoModal} />
-        </div>;
+            <Route
+                path='/photography/preview/:filename'
+                component={PhotoPreview}
+            />
+        </section>;
     }
 }
 
