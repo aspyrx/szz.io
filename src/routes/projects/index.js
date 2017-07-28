@@ -7,23 +7,21 @@ import { GithubIcon } from '~/components/icons';
 
 import styles from './index.less';
 
-const projects = [
-    {
-        title: 'audiovisual',
-        className: styles.audiovisual,
-        href: 'https://av.aspyrx.co',
-        github: 'https://github.com/aspyrx/audiovisual'
-    }, {
-        title: 'tictactoe',
-        className: styles.tictactoe,
-        href: 'http://3t.aspyrx.co',
-        github: 'https://github.com/aspyrx/tictactoe'
-    }, {
-        title: 'Carnegie Mellon Racing',
-        className: styles.cmr,
-        href: 'https://cmr.aspyrx.co'
-    }
-];
+const projects = [{
+    title: 'IPACES.org',
+    className: styles.ipaces,
+    href: 'https://ipaces.org',
+    github: 'https://github.com/aspyrx/ipaces.org'
+}, {
+    title: 'audiovisual',
+    className: styles.audiovisual,
+    href: 'https://av.aspyrx.co',
+    github: 'https://github.com/aspyrx/audiovisual'
+}, {
+    title: 'Carnegie Mellon Racing',
+    className: styles.cmr,
+    href: 'https://cmr.aspyrx.co'
+}];
 
 function Project(props) {
     const { project } = props;
