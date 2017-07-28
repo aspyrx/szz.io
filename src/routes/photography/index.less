@@ -1,13 +1,13 @@
-@import '~base';
+@import '~components/base';
 
 .photography {
-    .photos {
+    .thumbnails {
         display: flex;
         flex-flow: row wrap;
         justify-content: center;
         align-items: center;
 
-        .photo {
+        .thumbnail {
             position: relative;
             flex: 1 0 @width-container-max / 4;
             max-width: @width-container-max / 3;
@@ -36,7 +36,7 @@
                 width: auto;
                 transform: translate(-50%, -50%);
 
-                box-shadow: 0px 0px @blur-shadow @spread-shadow @color-shadow;
+                box-shadow: @box-shadow;
 
                 transition: opacity @duration-transition;
                 opacity: 0;
@@ -48,7 +48,7 @@
         }
     }
 
-    .photoModal {
+    .photoPreview {
         position: fixed;
         top: 0;
         left: 0;
@@ -116,7 +116,7 @@
         }
     }
 
-    .transitionAnimated {
+    .transitionReplace {
         .appear {
             opacity: 0.001;
 
@@ -145,11 +145,11 @@
 
         .enter.enterActive {
             opacity: 1;
-            transition: opacity @duration-enter-leave;
+            transition: opacity @duration-enter;
 
             .image {
                 transform: translate(-50%, -50%);
-                transition: transform @duration-enter-leave;
+                transition: transform @duration-enter;
             }
         }
 
@@ -159,16 +159,15 @@
 
         .leave.leaveActive {
             opacity: 0.001;
-            transition: opacity @duration-enter-leave;
+            transition: opacity @duration-exit;
 
             .image {
                 transform: translate(50%, -50%);
-                transition: transform @duration-enter-leave;
+                transition: transform @duration-exit;
             }
         }
 
-
-        &.increase {
+        &.fromRight {
             .enter .image {
                 transform: translate(50%, -50%);
             }

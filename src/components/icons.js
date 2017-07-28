@@ -1,6 +1,8 @@
 import React from 'react';
+import { string } from 'prop-types';
 import classNames from 'classnames';
 
+import Anchor from '~/components/Anchor';
 import styles from './icons.less';
 
 export function GithubIcon(props) {
@@ -10,30 +12,28 @@ export function GithubIcon(props) {
         'octicon-mark-github',
         className
     );
-
-    return <a className={classes} {...rest} />
+    return <Anchor {...rest} className={classes} />;
 }
 
 GithubIcon.propTypes = {
-    className: React.PropTypes.any
+    className: string
 };
 
 GithubIcon.defaultProps = {
-    href: 'https://github.com/aspyrx',
-    target: '_blank'
+    href: 'https://github.com/aspyrx'
 };
 
 export function FacebookIcon(props) {
     const { className, ...rest } = props;
-    return <a className={classNames(className, styles.facebookIcon)} {...rest} />;
+    const classes = classNames(className, styles.facebookIcon);
+    return <Anchor {...rest} className={classes} />;
 }
 
 FacebookIcon.propTypes = {
-    className: React.PropTypes.any
+    className: string
 };
 
 FacebookIcon.defaultProps = {
-    href: 'https://www.facebook.com/stan.zhang2',
-    target: '_blank'
+    href: 'https://www.facebook.com/stan.zhang2'
 };
 

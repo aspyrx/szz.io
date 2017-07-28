@@ -1,7 +1,8 @@
+import 'normalize.css/normalize.css';
 import styles from './index.less';
 
-import backgroundData from '~/images/bg.svg';
-
+import backgroundData from 'public/assets/bg.svg';
+import onAppLoaded from 'bundle-loader!~/app';
 
 (function background(parent) {
     const elem = document.createElement('object');
@@ -10,9 +11,9 @@ import backgroundData from '~/images/bg.svg';
     elem.type = 'image/svg+xml';
 
     parent.appendChild(elem);
-})(document.body);
+}(document.body));
 
-const spinner = (function spinner() {
+let spinner = (function spinner() {
     const elem = document.createElement('div');
     elem.classList.add(styles.spinner);
 
@@ -30,21 +31,51 @@ const spinner = (function spinner() {
     elem.appendChild(logoS);
 
     return elem;
-})();
+}());
 
 document.body.appendChild(spinner);
 
+function removeSpinner() {
+    spinner.parentElement.removeChild(spinner);
+    spinner = null;
+}
+
 const appDiv = document.createElement('div');
 appDiv.id = 'app';
+document.body.appendChild(appDiv);
 
-window.addEventListener('appBundleLoaded', function onAppBundleLoaded(event) {
-    event.renderApp(appDiv, function onAppRender() {
-        spinner.classList.add(styles.loaded);
-        document.body.appendChild(appDiv);
+// check for CSS3 flexbox support
+if (!('flex' in appDiv.style)) {
+    setTimeout(() => window.alert( // eslint-disable-line no-alert
+        'Your browser does not appear to support CSS Flexbox. Certain parts of'
+        + ' the website may not display correctly. Apologies for any'
+        + ' inconvenience!'
+    ), 0);
+}
 
-        setTimeout(function removeSpinner() {
-            spinner.parentElement.removeChild(spinner);
-        }, 500);
+function start() {
+    onAppLoaded(app => {
+        app.render(appDiv, function onAppRender() {
+            if (spinner) {
+                spinner.classList.add(styles.loaded);
+                setTimeout(removeSpinner, 500);
+            }
+        });
     });
-});
+}
+
+start();
+
+if (module.hot) {
+    module.hot.accept('bundle-loader!~/app', () => {
+        start();
+    });
+
+    module.hot.dispose(() => {
+        document.body.removeChild(appDiv);
+        if (spinner) {
+            removeSpinner();
+        }
+    });
+}
 

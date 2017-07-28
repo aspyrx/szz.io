@@ -1,0 +1,56 @@
+@import '~components/base';
+
+.home {
+    display: flex;
+    flex-flow: column;
+
+    text-align: center;
+
+    header h1 {
+        font-size: 400%;
+        margin: @spacing-y @spacing-x;
+    }
+
+    main h2 {
+        font-weight: lighter;
+        a {
+            font-weight: normal;
+        }
+    }
+
+    .icons {
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: center;
+
+        > a {
+            margin-right: @spacing-x;
+        }
+    }
+
+    .avatar {
+        display: flex;
+        justify-content: center;
+
+        img {
+            border: 5px solid transparent;
+            border-radius: 50%;
+            margin: @spacing-y @spacing-x;
+            transition: all @duration-transition;
+            min-height: 256px;
+            min-width: 256px;
+            opacity: 0;
+
+            &.loaded {
+                opacity: 1;
+            }
+        }
+
+        &:hover, &:active {
+            img {
+                border-color: @color-primary;
+            }
+        }
+    }
+}
+

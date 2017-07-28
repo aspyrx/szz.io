@@ -1,111 +1,113 @@
-import React, {Component} from 'react';
-import {render} from 'react-dom';
-import Router from 'react-router/lib/Router';
-import Route from 'react-router/lib/Route';
-import IndexRedirect from 'react-router/lib/IndexRedirect';
-import browserHistory from 'react-router/lib/browserHistory';
-import ReactCSSTransitionReplace from 'react-css-transition-replace';
-import classNames from 'classnames';
+import ReactDOM from 'react-dom';
+import React, { Component } from 'react';
+import { string, object, shape } from 'prop-types';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { AppContainer } from 'react-hot-loader';
 
-import pages from '~/pages';
-import Header from '~/components/header';
+import asyncComponent from '~/components/async-component';
+import Spinner from '~/components/Spinner';
+import TransitionReplace from '~/components/TransitionReplace';
+import NotFound from 'bundle-loader?lazy!~/NotFound';
+import routeConfig, { routeConfigFlat } from '~/routeConfig';
+import Header from '~/Header';
 
-import styles from './app.less'
-import 'normalize-css/normalize.css';
+import styles from './app.less';
+import '^/roboto/roboto.css';
 import '^/octicons/octicons.less';
 
-function getChildPath(path) {
-    const index = path.indexOf('/', 1);
-    return index < 0 ? path : path.substring(0, index);
-}
+const asyncNotFound = asyncComponent(NotFound, Spinner);
 
-const pageOrder = Object.create(null);
-pages.forEach((module, i) => pageOrder[getChildPath(module.page.path)] = i);
+const routes = routeConfigFlat.map((config, i) => {
+    const { path, component } = config;
+    return <Route
+        key={i}
+        path={path}
+        exact={path === '/'}
+        strict
+        component={component}
+    />;
+});
 
-class App extends Component {
+const locationsIndex = Object.create(null);
+const locations = (function getLocations(config, index) {
+    const { path, title, children } = config;
+    const root = { path, title };
+    index[''] = 0;
+    const childLocations = Object.keys(children)
+        .sort((a, b) => a.length - b.length)
+        .map((key, i) => {
+            index[key] = i + 1;
+            return children[key];
+        });
+
+    const arr = [root].concat(childLocations);
+    return arr;
+}(routeConfig, locationsIndex));
+
+class TransitionRoutes extends Component {
     static get propTypes() {
         return {
-            children: React.PropTypes.node.isRequired,
-            location: React.PropTypes.shape({
-                pathname: React.PropTypes.string
-            })
+            match: shape({
+                params: shape({
+                    key: string
+                }).isRequired
+            }).isRequired,
+            location: object.isRequired
         };
     }
 
     constructor() {
         super();
-
         this.state = {
-            linkIncrease: false
-        }
+            fromRight: false
+        };
     }
 
-    componentWillReceiveProps(props) {
-        let { location: { pathname } } = props;
-        let { location: { pathname: currPath } } = this.props;
+    componentWillReceiveProps(nextProps) {
+        const { key: nextKey = '' } = nextProps.match.params;
+        const { key = '' } = this.props.match.params;
+        if (key === nextKey) {
+            return;
+        }
 
-        pathname = getChildPath(pathname);
-        currPath = getChildPath(currPath);
-
-        if (pathname !== currPath) {
-            if (pageOrder[pathname] > pageOrder[currPath]) {
-                this.setState({ linkIncrease: true });
-            } else {
-                this.setState({ linkIncrease: false });
-            }
+        const nextFromRight = locationsIndex[nextKey] > locationsIndex[key];
+        const { fromRight } = this.state;
+        if (nextFromRight !== fromRight) {
+            this.setState({ fromRight: nextFromRight });
         }
     }
 
     render() {
-        const { location: { pathname }, children } = this.props;
-        const { linkIncrease } = this.state;
-        const replaceClass = classNames(styles.replaceAnimated, {
-            [styles.increase]: linkIncrease
-        });
+        const { match, location } = this.props;
+        const { fromRight } = this.state;
+        const { key = '' } = match.params;
 
-        return <div className={styles.containers}>
-            <div className={styles.container}>
-                <Header pages={pages} />
+        return <TransitionReplace
+            component='main'
+            fromRight={fromRight}
+        >
+            <div key={key}>
+                <Switch location={location}>
+                    { routes }
+                    <Route component={asyncNotFound} />
+                </Switch>
             </div>
-            <div className={styles.container}>
-                <ReactCSSTransitionReplace className={replaceClass}
-                    transitionName={{
-                        enter: styles.enter,
-                        enterActive: styles.enterActive,
-                        leave: styles.leave,
-                        leaveActive: styles.leaveActive,
-                        appear: styles.appear,
-                        appearActive: styles.appearActive,
-                        toString() { return styles.replaceAnimated; }
-                    }}
-                    transitionAppear={true}
-                    transitionAppearTimeout={750}
-                    transitionEnterTimeout={600}
-                    transitionLeaveTimeout={300}
-                    overflowHidden={false}>
-                    {React.cloneElement(children, {
-                        key: getChildPath(pathname)
-                    })}
-                </ReactCSSTransitionReplace>
-            </div>
-        </div>;
+        </TransitionReplace>;
     }
 }
 
-const bundleLoadedEvent = new Event('appBundleLoaded');
-bundleLoadedEvent.renderApp = function renderApp(elem, done) {
-    render(<Router history={browserHistory}>
-        <Route path="/" component={App}>
-            <IndexRedirect to={pages.indexPath} />
-            {pages.map((module, i) => {
-                const { default: Page, page: { path, routes } } = module;
-                return <Route key={i} path={path} component={Page}>
-                    {routes}
-                </Route>;
-            })}
-        </Route>
-    </Router>, elem, done);
-};
+function App() {
+    return <BrowserRouter>
+        <div className={styles.containers}>
+            <Header locations={locations} />
+            <Route path='/:key?/*' component={TransitionRoutes} />
+        </div>
+    </BrowserRouter>;
+}
 
-window.dispatchEvent(bundleLoadedEvent);
+export function render(elem, done) {
+    ReactDOM.render(<AppContainer>
+        <App />
+    </AppContainer>, elem, done);
+}
 
