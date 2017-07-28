@@ -2,7 +2,7 @@ import React from 'react';
 import { string } from 'prop-types';
 import classNames from 'classnames';
 
-import Anchor from '~/components/anchor';
+import Anchor from '~/components/Anchor';
 import styles from './icons.less';
 
 export function GithubIcon(props) {

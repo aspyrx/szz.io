@@ -35,8 +35,14 @@ let spinner = (function spinner() {
 
 document.body.appendChild(spinner);
 
+function removeSpinner() {
+    spinner.parentElement.removeChild(spinner);
+    spinner = null;
+}
+
 const appDiv = document.createElement('div');
 appDiv.id = 'app';
+document.body.appendChild(appDiv);
 
 // check for CSS3 flexbox support
 if (!('flex' in appDiv.style)) {
@@ -50,17 +56,10 @@ if (!('flex' in appDiv.style)) {
 function start() {
     onAppLoaded(app => {
         app.render(appDiv, function onAppRender() {
-            if (!spinner) {
-                return;
+            if (spinner) {
+                spinner.classList.add(styles.loaded);
+                setTimeout(removeSpinner, 500);
             }
-
-            spinner.classList.add(styles.loaded);
-            document.body.appendChild(appDiv);
-
-            setTimeout(function removeSpinner() {
-                spinner.parentElement.removeChild(spinner);
-                spinner = null;
-            }, 500);
         });
     });
 }
@@ -68,10 +67,15 @@ function start() {
 start();
 
 if (module.hot) {
-    module.hot.accept('bundle-loader!./app', start);
+    module.hot.accept('bundle-loader!~/app', () => {
+        start();
+    });
 
-    module.hot.dispose(() =>
-        document.body.removeChild(appDiv)
-    );
+    module.hot.dispose(() => {
+        document.body.removeChild(appDiv);
+        if (spinner) {
+            removeSpinner();
+        }
+    });
 }
 

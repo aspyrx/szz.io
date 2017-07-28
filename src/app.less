@@ -30,25 +30,12 @@ a {
         flex-flow: column;
         position: relative;
 
-        .container {
+        > main {
             position: relative;
 
-            &:first-of-type {
-                margin-top: 0;
-            }
-
-            &:last-of-type {
-                margin-bottom: 0;
-            }
-
-            margin: @spacing-y 0;
-            padding: @spacing-y @spacing-x;
+            margin: @spacing-y @spacing-x;
 
             color: @color-text;
-
-            > div {
-                margin: @spacing-y 0;
-            }
 
             .replaceAnimated {
                 .appear {

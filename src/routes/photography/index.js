@@ -2,7 +2,7 @@ import React from 'react';
 import { Route, Link } from 'react-router-dom';
 import { string, shape } from 'prop-types';
 
-import Anchor from '~/components/anchor';
+import Anchor from '~/components/Anchor';
 import cacheable from '~/components/cacheable';
 
 import styles from './index.less';

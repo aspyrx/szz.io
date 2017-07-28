@@ -2,7 +2,7 @@ import React from 'react';
 import { string, shape } from 'prop-types';
 import { Link, NavLink }  from 'react-router-dom';
 
-import styles from './header.less';
+import styles from './Header.less';
 
 import routeConfig from '~/routeConfig';
 
@@ -23,10 +23,11 @@ function Logo() {
 }
 
 function HeaderLink(props) {
-    const { path, title } = props.config;
+    const { config: { path, title }, ...rest } = props;
     return <NavLink key={path}
         to={path}
         activeClassName={styles.active}
+        {...rest}
     >
         {title}
     </NavLink>;
@@ -47,11 +48,12 @@ function renderNav(parent, children) {
 }
 
 export default function Header() {
-    return <div className={styles.header}>
+    return <header className={styles.header}>
         <Link to='/'><Logo /></Link>
-        <div className={styles.navigation}>
+        <nav className={styles.navigation}>
+            <HeaderLink config={routeConfig} exact />
             {renderNav('', routeConfig.children)}
-        </div>
-    </div>;
+        </nav>
+    </header>;
 }
 

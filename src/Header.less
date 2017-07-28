@@ -5,7 +5,8 @@
     display: flex;
     flex-flow: row wrap;
     align-items: baseline;
-    @height-header: 30px;
+    margin: @spacing-y @spacing-x;
+    @height-header: @font-size * 2;
     font-size: @height-header;
     font-weight: lighter;
 
@@ -119,14 +120,14 @@
         }
     }
 
-    .navigation {
+    > nav {
         flex: 1;
         display: flex;
         flex-flow: row wrap;
         min-width: 75%;
         align-items: baseline;
 
-        a {
+        > a {
             margin: 0 @spacing-x;
             color: @color-text;
             transition: color @duration-transition;

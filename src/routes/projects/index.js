@@ -2,7 +2,7 @@ import React from 'react';
 import { shape, string } from 'prop-types';
 import classNames from 'classnames';
 
-import Anchor from '~/components/anchor';
+import Anchor from '~/components/Anchor';
 import { GithubIcon } from '~/components/icons';
 
 import styles from './index.less';

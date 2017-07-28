@@ -2,67 +2,53 @@
 
 .home {
     display: flex;
-    flex-flow: column nowrap;
+    flex-flow: column;
 
-    > div {
-        margin: @spacing-y 0;
+    text-align: center;
+
+    header h1 {
+        font-size: 400%;
+        margin: @spacing-y @spacing-x;
     }
 
-    .bio {
+    main h2 {
+        font-weight: lighter;
+        a {
+            font-weight: normal;
+        }
+    }
+
+    .icons {
         display: flex;
-        flex-flow: column;
+        flex-flow: row wrap;
+        justify-content: center;
 
-        .avatar {
-            display: flex;
-            justify-content: center;
+        > a {
+            margin-right: @spacing-x;
+        }
+    }
 
-            img {
-                border: 5px solid transparent;
-                border-radius: 50%;
-                margin: @spacing-y @spacing-x;
-                transition: all @duration-transition;
-                min-height: 256px;
-                min-width: 256px;
-                opacity: 0;
+    .avatar {
+        display: flex;
+        justify-content: center;
 
-                &.loaded {
-                    opacity: 1;
-                }
-            }
+        img {
+            border: 5px solid transparent;
+            border-radius: 50%;
+            margin: @spacing-y @spacing-x;
+            transition: all @duration-transition;
+            min-height: 256px;
+            min-width: 256px;
+            opacity: 0;
 
-            &:hover, &:active {
-                img {
-                    border-color: @color-primary;
-                }
+            &.loaded {
+                opacity: 1;
             }
         }
 
-        .text {
-            text-align: center;
-
-            h1, h2 {
-                margin: @spacing-y @spacing-x;
-            }
-
-            h1 {
-                font-size: 400%;
-            }
-
-            h2 {
-                font-weight: lighter;
-                a {
-                    font-weight: normal;
-                }
-            }
-
-            .icons {
-                display: flex;
-                flex-flow: row wrap;
-                justify-content: center;
-
-                > a {
-                    margin-right: @spacing-x;
-                }
+        &:hover, &:active {
+            img {
+                border-color: @color-primary;
             }
         }
     }

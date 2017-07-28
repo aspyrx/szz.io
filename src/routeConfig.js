@@ -1,8 +1,8 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
 
-import asyncComponent from '~/components/asyncComponent';
-import Spinner from '~/components/spinner';
+import asyncComponent from '~/components/async-component';
+import Spinner from '~/components/Spinner';
 
 const routeConfigCtx = require.context(
     '~/routes',
