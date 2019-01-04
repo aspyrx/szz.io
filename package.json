@@ -1,5 +1,5 @@
 {
-  "name": "aspyrx.co",
+  "name": "szz.io",
   "version": "1.0.0",
   "description": "My personal website",
   "main": "src/index.js",
@@ -13,14 +13,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/aspyrx/aspyrx.co"
+    "url": "git+https://github.com/aspyrx/szz.io"
   },
   "author": "Stan Zhang <stan.zhang2@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/aspyrx/aspyrx.co/issues"
+    "url": "https://github.com/aspyrx/szz.io/issues"
   },
-  "homepage": "https://github.com/aspyrx/aspyrx.co#readme",
+  "homepage": "https://github.com/aspyrx/szz.io#readme",
   "dependencies": {},
   "devDependencies": {
     "autoprefixer": "^7.1.2",

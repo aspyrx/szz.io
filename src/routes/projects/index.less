@@ -5,11 +5,18 @@
     flex-flow: row wrap;
     justify-content: center;
 
+    margin-block-end: -@spacing-y;
+    margin-inline-end: -@spacing-x;
+
     .project {
+        @max-width: @width-container-max / 2 - 2 * @spacing-x;
+
         position: relative;
-        flex: 1 0 @width-container-max / 4;
-        max-width: @width-container-max / 3;
-        margin: @spacing-y @spacing-x;
+        flex: 1 1 @max-width;
+        max-width: @max-width;
+        margin-block-end: @spacing-y;
+        margin-inline-end: @spacing-x;
+
         box-shadow: @box-shadow;
 
         transition: transform @duration-transition;
@@ -23,6 +30,7 @@
 
         &:hover, &:active, &:focus {
             transform: scale(1.1, 1.1);
+            z-index: 1;
         }
 
         .button {
@@ -38,16 +46,21 @@
             justify-content: center;
             align-items: center;
 
-            &.ipaces {
-                background-color: #800000;
-            }
-
             &.audiovisual {
                 background-color: #0080FF;
             }
 
             &.cmr {
                 background-color: #A6192E;
+            }
+
+            &.cmujsa {
+                background-color: #7C1F20;
+            }
+
+            &.trackOmatic {
+                color: #101820;
+                background-color: #FFB612;
             }
 
             .title {

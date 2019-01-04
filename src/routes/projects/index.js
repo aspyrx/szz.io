@@ -8,11 +8,6 @@ import { GithubIcon } from '~/components/icons';
 import styles from './index.less';
 
 const projects = [{
-    title: 'IPACES.org',
-    className: styles.ipaces,
-    href: 'https://ipaces.org',
-    github: 'https://github.com/aspyrx/ipaces.org'
-}, {
     title: 'audiovisual',
     className: styles.audiovisual,
     href: 'https://av.aspyrx.co',
@@ -20,7 +15,18 @@ const projects = [{
 }, {
     title: 'Carnegie Mellon Racing',
     className: styles.cmr,
-    href: 'https://cmr.aspyrx.co'
+    href: 'https://cmr.aspyrx.co',
+    github: 'https://github.com/carnegiemellonracing/telemetry'
+}, {
+    title: 'CMU JSA',
+    className: styles.cmujsa,
+    href: 'https://cmujsa.com',
+    github: 'https://github.com/cmu-jsa/JSA-web'
+}, {
+    title: 'track-o-matic',
+    className: styles.trackOmatic,
+    href: 'https://www.build18.org/garage/project/272/',
+    github: 'https://github.com/aspyrx/track-o-matic'
 }];
 
 function Project(props) {
