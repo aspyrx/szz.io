@@ -22,12 +22,9 @@ export default function Home() {
         </header>
         <main>
             <h2>
-                <Anchor href='https://ece.cmu.edu/'>
-                    Electrical and Computer Engineering
-                </Anchor>
-                <span> major at </span>
-                <Anchor href='https://www.cmu.edu/'>
-                    Carnegie Mellon University
+                <span>Senior MTS, ESXi VMkernel core,&nbsp;</span>
+                <Anchor href='https://www.vmware.com/'>
+                    VMware
                 </Anchor>
                 <span>.</span>
             </h2>
