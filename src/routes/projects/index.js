@@ -13,21 +13,21 @@ const projects = [{
     href: 'https://av.aspyrx.co',
     github: 'https://github.com/aspyrx/audiovisual'
 }, {
-    title: 'Carnegie Mellon Racing',
-    className: styles.cmr,
-    href: 'https://cmr.aspyrx.co',
-    github: 'https://github.com/carnegiemellonracing/telemetry'
-}, {
     title: 'CMU JSA',
     className: styles.cmujsa,
     href: 'https://cmujsa.com',
     github: 'https://github.com/cmu-jsa/JSA-web'
 }, {
+    title: 'szz.io',
+    className: styles.szzIo,
+    href: 'https://github.com/aspyrx/szz.io',
+    github: 'https://github.com/aspyrx/szz.io'
+}, {
     title: 'track-o-matic',
     className: styles.trackOmatic,
     href: 'https://www.build18.org/garage/project/272/',
     github: 'https://github.com/aspyrx/track-o-matic'
-}];
+}, ];
 
 function Project(props) {
     const { project } = props;
