@@ -13,10 +13,10 @@ const projects = [{
     href: 'https://av.aspyrx.co',
     github: 'https://github.com/aspyrx/audiovisual'
 }, {
-    title: 'CMU JSA',
-    className: styles.cmujsa,
-    href: 'https://cmujsa.com',
-    github: 'https://github.com/cmu-jsa/JSA-web'
+    title: 'IPACES.org',
+    className: styles.ipaces,
+    href: 'https://ipaces.org',
+    github: 'https://github.com/aspyrx/ipaces.org'
 }, {
     title: 'szz.io',
     className: styles.szzIo,
