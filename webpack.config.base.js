@@ -144,6 +144,11 @@ module.exports = {
         }),
         new HtmlWebpackPlugin({
             template: 'src/index.html'
+        }),
+        // SPA 404 redirect.
+        new HtmlWebpackPlugin({
+            template: 'src/index.html',
+            filename: '404.html'
         })
     ]
 };
