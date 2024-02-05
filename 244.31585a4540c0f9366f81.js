@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkszz_io=self.webpackChunkszz_io||[]).push([[244],{1244:(e,t,n)=>{n.r(t),n.d(t,{default:()=>a});var l=n(1504),u=n(3284);function a(){const{pathname:e}=(0,u.IT)();return l.createElement("div",null,l.createElement("h1",null,"404 - Not Found"),l.createElement("p",null,"The location ",l.createElement("code",null,e)," does not exist."))}}}]);
