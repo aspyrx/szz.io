@@ -22,9 +22,9 @@ export default function Home() {
         </header>
         <main>
             <h2>
-                <span>Senior MTS, ESXi VMkernel core,&nbsp;</span>
+                <span>Staff Engineer, ESXi VMkernel core,&nbsp;</span>
                 <Anchor href='https://www.vmware.com/'>
-                    VMware
+                    VMware by Broadcom
                 </Anchor>
                 <span>.</span>
             </h2>
