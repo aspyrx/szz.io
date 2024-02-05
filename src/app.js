@@ -15,8 +15,6 @@ import Header from 'src/Header';
 
 import styles from './app.less';
 
-const asyncNotFound = asyncComponent(NotFound, Spinner);
-
 const locationsIndex = Object.create(null);
 const locations = (function getLocations(config, index) {
     const { path, title, children } = config;
@@ -88,10 +86,12 @@ function App() {
 }
 
 function routeFromConfig(config) {
-    const { path, getComponent } = config;
+    const { childRoutes, path, getComponent } = config;
     const routeProps = (path === '/')
         ? { index: true }
-        : { path: path.substring(1) + '*' };
+        : {
+            path: path.substring(1) + (childRoutes ? '*' : '')
+        };
     return <Route
         key={path}
         Component={asyncComponent(getComponent, Spinner)}
@@ -103,7 +103,7 @@ function routeFromConfig(config) {
 const routes = createRoutesFromElements(
     <Route element={<App />}>
         {routeConfigFlat.map(routeFromConfig)}
-        <Route Component={asyncNotFound} />
+        <Route path='/*' Component={asyncComponent(NotFound, Spinner)} />
     </Route>
 );
 const router = createBrowserRouter(routes);

@@ -13,7 +13,7 @@ const routeComponentCtx = require.context(
 const routeConfig = { children: Object.create(null) };
 
 function configure(configPath) {
-    const { title } = routeConfigCtx(configPath);
+    const routeProps = routeConfigCtx(configPath);
     const path = configPath.match(/.(\/|\/.*\/)route.json$/)[1];
 
     let getComponent;
@@ -34,7 +34,7 @@ function configure(configPath) {
         return node.children[key];
     }, routeConfig);
 
-    route.title = title;
+    Object.assign(route, routeProps);
     route.path = path;
     route.getComponent = getComponent;
     return route;
