@@ -23,7 +23,11 @@ a {
     .containers {
         flex: 1;
         display: flex;
-        max-width: @width-container-max;
+        max-width: 100%;
+        @media screen and (min-width: @width-container-max) {
+            max-width: @width-container-max;
+        }
+
         flex-flow: column nowrap;
         position: relative;
 
