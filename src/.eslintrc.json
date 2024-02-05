@@ -3,11 +3,14 @@
         "react"
     ],
     "extends": ["plugin:react/recommended"],
-    "parser": "babel-eslint",
+    "parser": "@babel/eslint-parser",
     "env": {
         "node": false,
         "browser": true,
         "commonjs": true,
         "es6": true
+    },
+    "globals": {
+        "__webpack_public_path__": true
     }
 }

@@ -1,11 +1,14 @@
-import React, { Component } from 'react';
-import { Route, Link, Redirect } from 'react-router-dom';
-import { string, object, shape } from 'prop-types';
+import React, { Component, forwardRef } from 'react';
+import {
+    Routes, Route, Link, Navigate,
+    useParams
+} from 'react-router-dom';
+import { string } from 'prop-types';
 import classNames from 'classnames';
 
-import TransitionReplace from '~/components/TransitionReplace';
-import Anchor from '~/components/Anchor';
-import cacheable from '~/components/cacheable';
+import TransitionReplace from 'src/components/TransitionReplace';
+import Anchor from 'src/components/Anchor';
+import cacheable from 'src/components/cacheable';
 
 import styles from './index.less';
 
@@ -59,11 +62,11 @@ function Thumbnails() {
     </nav>;
 }
 
-function PhotoPreview(props) {
+const PhotoPreview = forwardRef(function PhotoPreview(props, ref) {
     const { filename, className } = props;
     const photo = photosMap[filename];
     if (!photo) {
-        return <Redirect to='/photography/' />;
+        return <Navigate to='..' />;
     }
 
     const { index, url } = photo;
@@ -71,27 +74,29 @@ function PhotoPreview(props) {
     const next = index > 0
         ? <Link
             className={styles.prev}
-            to={`./${photos[index - 1].filename}`}
+            to={`../${photos[index - 1].filename}`}
+            relative="path"
         />
         : null;
 
     const prev = index < photos.length - 1
         ? <Link
             className={styles.next}
-            to={`./${photos[index + 1].filename}`}
+            to={`../${photos[index + 1].filename}`}
+            relative="path"
         />
         : null;
 
     const classes = classNames(className, styles.photoPreview);
-    return <div className={classes}>
-        <Link to='/photography/' className={styles.close} />
+    return <div className={classes} ref={ref}>
+        <Link to='..' className={styles.close} />
         <Anchor href={url}>
             <img src={url} className={styles.image} />
         </Anchor>
         {next}
         {prev}
     </div>;
-}
+});
 
 PhotoPreview.propTypes = {
     className: string,
@@ -101,12 +106,7 @@ PhotoPreview.propTypes = {
 class TransitionPreviews extends Component {
     static get propTypes() {
         return {
-            match: shape({
-                params: shape({
-                    filename: string.isRequired
-                }).isRequired
-            }).isRequired,
-            location: object.isRequired
+            filename: string
         };
     }
 
@@ -117,16 +117,16 @@ class TransitionPreviews extends Component {
         };
     }
 
-    componentWillReceiveProps(nextProps) {
-        const { filename: nextFilename } = nextProps.match.params;
-        const { filename } = this.props.match.params;
-        if (filename === nextFilename) {
+    componentDidUpdate(prevProps) {
+        const { filename: prevFilename } = prevProps;
+        const { filename } = this.props;
+        if (filename === prevFilename) {
             return;
         }
 
-        const { index: nextIndex } = photosMap[nextFilename];
+        const { index: prevIndex } = photosMap[prevFilename];
         const { index } = photosMap[filename];
-        const nextFromRight = nextIndex > index;
+        const nextFromRight = index > prevIndex;
         const { fromRight } = this.state;
 
         if (nextFromRight !== fromRight) {
@@ -135,7 +135,7 @@ class TransitionPreviews extends Component {
     }
 
     render() {
-        const { filename } = this.props.match.params;
+        const { filename } = this.props;
         const { fromRight } = this.state;
 
         return <TransitionReplace
@@ -147,14 +147,21 @@ class TransitionPreviews extends Component {
     }
 }
 
+function Preview() {
+    const { filename } = useParams();
+    return <TransitionPreviews filename={filename} />;
+}
+
 export default class Photography extends React.Component {
     render() {
         return <section className={styles.photography}>
             <Thumbnails />
-            <Route
-                path='/photography/preview/:filename'
-                component={TransitionPreviews}
-            />
+            <Routes>
+                <Route
+                    path='preview/:filename'
+                    element={<Preview />}
+                />
+            </Routes>
         </section>;
     }
 }

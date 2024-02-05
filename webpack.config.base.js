@@ -1,50 +1,42 @@
 'use strict';
 
 const path = require('path');
-const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const ESLintPlugin = require('eslint-webpack-plugin');
 
 const ctxDir = path.resolve(__dirname);
 const srcDir = path.resolve(ctxDir, 'src');
-const outDir = path.resolve(ctxDir, 'dist');
-const vendorDir = path.resolve(ctxDir, 'vendor');
 const loadersDir = path.resolve(ctxDir, 'loaders');
 const publicDir = path.resolve(ctxDir, 'public');
+const vendorDir = path.resolve(ctxDir, 'vendor');
+const outDir = path.resolve(ctxDir, 'dist');
+
 const publicPath = '/';
 
 module.exports = {
+    mode: 'development',
     devtool: 'cheap-module-source-map',
-    devServer: {
-        contentBase: [outDir, publicDir],
-        hot: true,
-        compress: true,
-        historyApiFallback: true,
-        stats: { colors: true, timings: true, cached: false }
-    },
     context: ctxDir,
     entry: {
         main: ['normalize.css', srcDir],
         lib: [
-            'babel-polyfill',
             'react', 'react-dom',
             'react-router', 'react-router-dom'
         ]
     },
     output: {
+        clean: true,
         path: outDir,
         publicPath,
         filename: '[name].[chunkhash].js'
     },
     resolve: {
         alias: {
-            '~': srcDir,
-            '^': vendorDir,
-            'public': publicDir
-        },
-        modules: [
-            srcDir,
-            'node_modules'
-        ]
+            'src': srcDir,
+            'public': publicDir,
+            'vendor': vendorDir
+        }
     },
     resolveLoader: {
         alias: {
@@ -63,59 +55,46 @@ module.exports = {
             }]
         }, {
             test: /\.css$/,
-            include: [vendorDir, /node_modules/],
-            use: [{
-                loader: 'style-loader'
-            }, {
-                loader: 'css-loader',
-                options: { importLoaders: 1 }
-            }, {
-                loader: 'postcss-loader'
-            }]
-        }, {
-            test: /\.less$/,
-            include: [vendorDir, /node_modules/],
-            use: [{
-                loader: 'style-loader'
-            }, {
-                loader: 'css-loader',
-                options: { importLoaders: 2 }
-            }, {
-                loader: 'postcss-loader'
-            }, {
-                loader: 'less-loader'
-            }]
-        }, {
-            test: /\.css$/,
-            include: [srcDir],
-            use: [{
-                loader: 'style-loader'
-            }, {
-                loader: 'css-loader',
-                options: {
-                    modules: true,
-                    localIdentName: '[local]-[hash:base64:5]',
-                    importLoaders: 1
-                }
-            }, {
-                loader: 'postcss-loader'
-            }]
+            include: [/node_modules/, vendorDir],
+            use: [
+                MiniCssExtractPlugin.loader,
+                'css-loader',
+                'postcss-loader'
+            ]
         }, {
             test: /\.less$/,
             include: [srcDir],
+            use: [
+                MiniCssExtractPlugin.loader,
+                {
+                    loader: 'css-loader',
+                    options: {
+                        modules: {
+                            localIdentName: '[local]-[hash:base64:5]'
+                        }
+                    }
+                },
+                'postcss-loader',
+                'less-loader'
+            ]
+        }, {
+            test: /\.less$/,
+            include: [vendorDir],
+            use: [
+                MiniCssExtractPlugin.loader,
+                'css-loader',
+                'postcss-loader',
+                'less-loader'
+            ]
+        }, {
+            test: /\.js$/,
+            include: [
+                srcDir,
+                // https://github.com/webpack/loader-utils/issues/92
+                /node_modules\/loader-utils/
+            ],
             use: [{
-                loader: 'style-loader'
-            }, {
-                loader: 'css-loader',
-                options: {
-                    modules: true,
-                    localIdentName: '[local]-[hash:base64:5]',
-                    importLoaders: 2
-                }
-            }, {
-                loader: 'postcss-loader'
-            }, {
-                loader: 'less-loader'
+                loader: 'babel-loader'
             }]
         }, {
             test: /\.md$/,
@@ -123,24 +102,14 @@ module.exports = {
                 loader: '>/markdown-react-loader'
             }]
         }, {
-            test: /\.js$/,
-            exclude: /node_modules/,
-            use: [{
-                loader: 'babel-loader'
-            }]
-        }, {
-            test: /\.(eot|woff|ttf|svg|jpg|ico)$/,
-            use: [{
-                loader: 'url-loader',
-                options: {
-                    limit: 10000
-                }
-            }]
+            test: /\.(eot|woff|ttf|svg|jpg|png|ico)$/,
+            exclude: [publicDir],
+            type: 'asset'
         }]
     },
     plugins: [
-        new webpack.optimize.CommonsChunkPlugin({
-            name: ['lib', 'manifest']
+        new MiniCssExtractPlugin({
+            filename: '[name].[contenthash].css'
         }),
         new HtmlWebpackPlugin({
             template: 'src/index.html'
@@ -149,6 +118,7 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: 'src/index.html',
             filename: '404.html'
-        })
+        }),
+        new ESLintPlugin()
     ]
 };

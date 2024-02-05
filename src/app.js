@@ -1,38 +1,28 @@
-import ReactDOM from 'react-dom';
 import React, { Component } from 'react';
-import { string, object, shape } from 'prop-types';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import { AppContainer } from 'react-hot-loader';
+import { createRoot } from 'react-dom/client';
+import { string } from 'prop-types';
+import {
+    createBrowserRouter, createRoutesFromElements, RouterProvider,
+    Route, Outlet, useLocation
+} from 'react-router-dom';
 
-import asyncComponent from '~/components/async-component';
-import Spinner from '~/components/Spinner';
-import TransitionReplace from '~/components/TransitionReplace';
-import NotFound from 'bundle-loader?lazy!~/NotFound';
-import routeConfig, { routeConfigFlat } from '~/routeConfig';
-import Header from '~/Header';
+import asyncComponent from 'src/components/async-component';
+import Spinner from 'src/components/Spinner';
+import TransitionReplace from 'src/components/TransitionReplace';
+import NotFound from 'bundle-loader?lazy!src/NotFound';
+import routeConfig, { routeConfigFlat } from 'src/routeConfig';
+import Header from 'src/Header';
 
 import styles from './app.less';
-import '^/roboto/roboto.css';
-import '^/octicons/octicons.less';
 
 const asyncNotFound = asyncComponent(NotFound, Spinner);
-
-const routes = routeConfigFlat.map((config, i) => {
-    const { path, component } = config;
-    return <Route
-        key={i}
-        path={path}
-        exact={path === '/'}
-        strict
-        component={component}
-    />;
-});
 
 const locationsIndex = Object.create(null);
 const locations = (function getLocations(config, index) {
     const { path, title, children } = config;
     const root = { path, title };
     index[''] = 0;
+
     const childLocations = Object.keys(children)
         .sort((a, b) => a.length - b.length)
         .map((key, i) => {
@@ -47,12 +37,7 @@ const locations = (function getLocations(config, index) {
 class TransitionRoutes extends Component {
     static get propTypes() {
         return {
-            match: shape({
-                params: shape({
-                    key: string
-                }).isRequired
-            }).isRequired,
-            location: object.isRequired
+            loc: string
         };
     }
 
@@ -63,14 +48,14 @@ class TransitionRoutes extends Component {
         };
     }
 
-    componentWillReceiveProps(nextProps) {
-        const { key: nextKey = '' } = nextProps.match.params;
-        const { key = '' } = this.props.match.params;
-        if (key === nextKey) {
+    componentDidUpdate(prevProps) {
+        const { loc: locPrev = '' } = prevProps;
+        const { loc = '' } = this.props;
+        if (loc === locPrev) {
             return;
         }
 
-        const nextFromRight = locationsIndex[nextKey] > locationsIndex[key];
+        const nextFromRight = locationsIndex[loc] > locationsIndex[locPrev];
         const { fromRight } = this.state;
         if (nextFromRight !== fromRight) {
             this.setState({ fromRight: nextFromRight });
@@ -78,36 +63,54 @@ class TransitionRoutes extends Component {
     }
 
     render() {
-        const { match, location } = this.props;
+        const { loc } = this.props;
         const { fromRight } = this.state;
-        const { key = '' } = match.params;
 
         return <TransitionReplace
             component='main'
             fromRight={fromRight}
         >
-            <div key={key}>
-                <Switch location={location}>
-                    { routes }
-                    <Route component={asyncNotFound} />
-                </Switch>
+            <div key={loc}>
+                <Outlet />
             </div>
         </TransitionReplace>;
     }
 }
 
 function App() {
-    return <BrowserRouter>
-        <div className={styles.containers}>
-            <Header locations={locations} />
-            <Route path='/:key?/*' component={TransitionRoutes} />
-        </div>
-    </BrowserRouter>;
+    const { pathname } = useLocation();
+    const loc = pathname.split('/')[1];
+
+    return <div className={styles.containers}>
+        <Header locations={locations} />
+        <TransitionRoutes loc={loc} />
+    </div>;
 }
 
-export function render(elem, done) {
-    ReactDOM.render(<AppContainer>
-        <App />
-    </AppContainer>, elem, done);
+function routeFromConfig(config) {
+    const { path, getComponent } = config;
+    const routeProps = (path === '/')
+        ? { index: true }
+        : { path: path.substring(1) + '*' };
+    return <Route
+        key={path}
+        Component={asyncComponent(getComponent, Spinner)}
+        {...routeProps}
+    >
+    </Route>;
+}
+
+const routes = createRoutesFromElements(
+    <Route element={<App />}>
+        {routeConfigFlat.map(routeFromConfig)}
+        <Route Component={asyncNotFound} />
+    </Route>
+);
+const router = createBrowserRouter(routes);
+
+export { createRoot };
+
+export function render(root) {
+    root.render(<RouterProvider router={router} />);
 }
 

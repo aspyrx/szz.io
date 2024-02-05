@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { GithubIcon, FacebookIcon } from '~/components/icons';
-import cacheable from '~/components/cacheable';
-import Anchor from '~/components/Anchor';
+import { GithubIcon, FacebookIcon } from 'src/components/icons';
+import cacheable from 'src/components/cacheable';
+import Anchor from 'src/components/Anchor';
 
 import styles from './index.less';
 

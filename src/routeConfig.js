@@ -1,14 +1,11 @@
-import asyncComponent from '~/components/async-component';
-import Spinner from '~/components/Spinner';
-
 const routeConfigCtx = require.context(
-    '~/routes',
+    'src/routes',
     true,
     /\/route.json$/
 );
 
 const routeComponentCtx = require.context(
-    'bundle-loader?lazy!~/routes',
+    'bundle-loader?lazy!src/routes',
     true,
     /\/index.(js|md)$/
 );
@@ -25,7 +22,6 @@ function configure(configPath) {
     } catch (err) {
         getComponent = routeComponentCtx(`.${path}index.md`);
     }
-    const component = asyncComponent(getComponent, Spinner);
 
     // Find the route's proper location in the configuration
     const parts = path.split('/').slice(1, -1);
@@ -40,7 +36,7 @@ function configure(configPath) {
 
     route.title = title;
     route.path = path;
-    route.component = component;
+    route.getComponent = getComponent;
     return route;
 }
 

@@ -1,4 +1,4 @@
-@import '~components/base';
+@import 'src/components/base';
 
 .projects {
     display: flex;
@@ -9,7 +9,7 @@
     margin-inline-end: -@spacing-x;
 
     .project {
-        @max-width: @width-container-max / 2 - 2 * @spacing-x;
+        @max-width: (@width-container-max / 2 - 2 * @spacing-x);
 
         position: relative;
         flex: 1 1 @max-width;

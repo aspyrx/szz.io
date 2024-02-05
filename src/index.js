@@ -2,7 +2,7 @@ import 'normalize.css/normalize.css';
 import styles from './index.less';
 
 import backgroundData from 'public/assets/bg.svg';
-import onAppLoaded from 'bundle-loader!~/app';
+import onAppLoaded from 'bundle-loader!src/app';
 
 (function background(parent) {
     const elem = document.createElement('object');
@@ -55,19 +55,18 @@ if (!('flex' in appDiv.style)) {
 
 function start() {
     onAppLoaded(app => {
-        app.render(appDiv, function onAppRender() {
-            if (spinner) {
-                spinner.classList.add(styles.loaded);
-                setTimeout(removeSpinner, 500);
-            }
-        });
+        app.render(app.createRoot(appDiv));
+        if (spinner) {
+            spinner.classList.add(styles.loaded);
+            setTimeout(removeSpinner, 500);
+        }
     });
 }
 
 start();
 
 if (module.hot) {
-    module.hot.accept('bundle-loader!~/app', () => {
+    module.hot.accept('bundle-loader!src/app', () => {
         start();
     });
 

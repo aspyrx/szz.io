@@ -24,8 +24,7 @@ function HeaderLink(props) {
     const { config: { path, title }, ...rest } = props;
     return <NavLink key={path}
         to={path}
-        exact={path === '/'}
-        activeClassName={styles.active}
+        className={({ isActive }) => (isActive ? styles.active : '')}
         {...rest}
     >
         {title}

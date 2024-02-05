@@ -2,8 +2,9 @@ import React from 'react';
 import { string } from 'prop-types';
 import classNames from 'classnames';
 
-import Anchor from '~/components/Anchor';
+import Anchor from 'src/components/Anchor';
 import styles from './icons.less';
+import 'vendor/octicons/octicons.less';
 
 export function GithubIcon(props) {
     const { className, ...rest } = props;
