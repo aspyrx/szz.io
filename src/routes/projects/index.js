@@ -8,25 +8,23 @@ import { GithubIcon } from 'src/components/icons';
 import * as styles from './index.less';
 
 const projects = [{
-    title: 'audiovisual',
-    className: styles.audiovisual,
-    href: 'https://av.aspyrx.co',
-    github: 'https://github.com/aspyrx/audiovisual',
-}, {
-    title: 'IPACES.org',
-    className: styles.ipaces,
-    href: 'https://ipaces.org',
-    github: 'https://github.com/aspyrx/ipaces.org',
-}, {
     title: 'szz.io',
     className: styles.szzIo,
     href: 'https://github.com/aspyrx/szz.io',
     github: 'https://github.com/aspyrx/szz.io',
 }, {
-    title: 'track-o-matic',
-    className: styles.trackOmatic,
-    href: 'https://www.build18.org/garage/project/272/',
-    github: 'https://github.com/aspyrx/track-o-matic',
+    title: 'audiovisual',
+    className: styles.audiovisual,
+    href: 'https://av.aspyrx.co',
+    github: 'https://github.com/aspyrx/audiovisual',
+}, {
+    title: '711@Ingleside',
+    className: styles.ingleside,
+    href: 'https://711.ingleside.co',
+}, {
+    title: 'Ocean Ale House',
+    className: styles.oah,
+    href: 'https://oceanalehouse.com',
 }];
 
 /**
