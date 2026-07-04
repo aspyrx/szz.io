@@ -4,13 +4,18 @@ import classNames from 'classnames';
 
 const cached = Object.create(null);
 
+/**
+ * Create a cacheable version of the component.
+ * @param {React.ComponentType} Component - The component.
+ * @returns {React.ComponentType} The cacheable component.
+ */
 export default function cacheable(Component) {
     return class CacheableComponent extends React.Component {
         static get propTypes() {
             return {
                 className: string,
                 loadedClass: string,
-                src: string
+                src: string,
             };
         }
 
@@ -35,11 +40,14 @@ export default function cacheable(Component) {
             const { loaded } = this.state;
             const classes = classNames(className, { [loadedClass]: loaded });
 
-            return <Component onLoad={onLoad}
-                className={classes}
-                src={src}
-                {...rest} />;
+            return (
+                <Component
+                    onLoad={onLoad}
+                    className={classes}
+                    src={src}
+                    {...rest}
+                />
+            );
         }
     };
 }
-

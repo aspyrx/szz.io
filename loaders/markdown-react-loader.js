@@ -1,12 +1,15 @@
-'use strict';
+import { Marked } from 'marked';
 
-const marked = require('marked');
-
+/**
+ * Convert HTML to React component script.
+ * @param {string} html - The HTML.
+ * @returns {string} The React component script.
+ */
 function toComponent(html) {
     html = html.replace(/\n/g, '\\n');
-    return `var React = require('react');
+    return `import React from 'react';
 
-module.exports.default = function() {
+export default function() {
     return React.createElement('div', {
         className: 'markdown',
         dangerouslySetInnerHTML: {
@@ -19,28 +22,27 @@ module.exports.default = function() {
 
 /**
  * Webpack loader for converting markdown into a stateless React component.
- *
  * The markdown is wrapped with a `div` tag with class `markdown`.
- *
  * @param {string} content - The markdown to convert.
  * @returns {void}
  */
-module.exports = function loader(content) {
+export default async function loader(content) {
     this.cacheable();
     this.addDependency(this.resourcePath);
 
     const done = this.async();
     if (!done) {
-        const html = toComponent(marked(content));
-        return html;
+        const marked = new Marked();
+        return toComponent(marked.parse(content));
     }
 
-    marked(content, (err, html) => {
-        if (err) {
-            return done(err);
-        }
-
-        done(null, toComponent(html));
+    const marked = new Marked({
+        async: true,
     });
+    try {
+        const html = await marked.parse(content);
+        return done(null, toComponent(html));
+    } catch (err) {
+        return done(err);
+    }
 };
-

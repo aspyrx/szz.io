@@ -4,7 +4,7 @@ import { GithubIcon, FacebookIcon } from 'src/components/icons';
 import cacheable from 'src/components/cacheable';
 import Anchor from 'src/components/Anchor';
 
-import styles from './index.less';
+import * as styles from './index.less';
 
 import avatar from 'public/assets/avatar.jpg';
 
@@ -12,27 +12,32 @@ const Img = cacheable(function img(props) {
     return <img {...props} />;
 });
 
+/**
+ * Home page.
+ * @returns {React.ReactElement} The component's elements.
+ */
 export default function Home() {
-    return <section className={styles.home}>
-        <header>
-            <Anchor className={styles.avatar} href='https://github.com/aspyrx'>
-                <Img src={avatar} loadedClass={styles.loaded} />
-            </Anchor>
-            <h1>Stan Zhang</h1>
-        </header>
-        <main>
-            <h2>
-                <span>Principal Engineer, ESXi VMkernel core,&nbsp;</span>
-                <Anchor href='https://www.vmware.com/'>
-                    VMware by Broadcom
+    return (
+        <section className={styles.home}>
+            <header>
+                <Anchor className={styles.avatar} href="https://github.com/aspyrx">
+                    <Img src={avatar} loadedClass={styles.loaded} />
                 </Anchor>
-                <span>.</span>
-            </h2>
-        </main>
-        <footer className={styles.icons}>
-            <GithubIcon />
-            <FacebookIcon />
-        </footer>
-    </section>;
+                <h1>Stan Zhang</h1>
+            </header>
+            <main>
+                <h2>
+                    <span>Principal Engineer, ESXi VMkernel core,&nbsp;</span>
+                    <Anchor href="https://www.vmware.com/">
+                        VMware by Broadcom
+                    </Anchor>
+                    <span>.</span>
+                </h2>
+            </main>
+            <footer className={styles.icons}>
+                <GithubIcon />
+                <FacebookIcon />
+            </footer>
+        </section>
+    );
 }
-

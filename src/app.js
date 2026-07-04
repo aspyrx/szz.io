@@ -1,19 +1,27 @@
-import React, { Component } from 'react';
-import { createRoot } from 'react-dom/client';
-import { string } from 'prop-types';
-import {
-    createBrowserRouter, createRoutesFromElements, RouterProvider,
-    Route, Outlet, useLocation
-} from 'react-router-dom';
+/**
+ * Main app module.
+ * @module src/App
+ */
 
-import asyncComponent from 'src/components/async-component';
-import Spinner from 'src/components/Spinner';
+import React, {
+    useEffect,
+    useRef,
+} from 'react';
+import { createRoot } from 'react-dom/client';
+import {
+    BrowserRouter,
+    Redirect,
+    Route,
+    Switch,
+    useLocation,
+} from 'react-router-dom';
+import AsyncComponent from 'src/AsyncComponent';
 import TransitionReplace from 'src/components/TransitionReplace';
-import NotFound from 'bundle-loader?lazy!src/NotFound';
 import routeConfig, { routeConfigFlat } from 'src/routeConfig';
+
 import Header from 'src/Header';
 
-import styles from './app.less';
+import * as styles from './app.less';
 
 const locationsIndex = Object.create(null);
 const locations = (function getLocations(config, index) {
@@ -32,85 +40,98 @@ const locations = (function getLocations(config, index) {
     return arr;
 }(routeConfig, locationsIndex));
 
-class TransitionRoutes extends Component {
-    static get propTypes() {
-        return {
-            loc: string
-        };
-    }
-
-    constructor() {
-        super();
-        this.state = {
-            fromRight: false
-        };
-    }
-
-    componentDidUpdate(prevProps) {
-        const { loc: locPrev = '' } = prevProps;
-        const { loc = '' } = this.props;
-        if (loc === locPrev) {
-            return;
-        }
-
-        const nextFromRight = locationsIndex[loc] > locationsIndex[locPrev];
-        const { fromRight } = this.state;
-        if (nextFromRight !== fromRight) {
-            this.setState({ fromRight: nextFromRight });
-        }
-    }
-
-    render() {
-        const { loc } = this.props;
-        const { fromRight } = this.state;
-
-        return <TransitionReplace
-            component='main'
-            fromRight={fromRight}
-        >
-            <div key={loc}>
-                <Outlet />
-            </div>
-        </TransitionReplace>;
-    }
-}
-
-function App() {
+/**
+ * Transition the route's elements.
+ * @param {object} props - The component's props.
+ * @returns {React.ReactElement} The component's elements.
+ */
+function TransitionRoutes(props) {
+    const { children } = props;
     const { pathname } = useLocation();
     const loc = pathname.split('/')[1];
+    const locPrevRef = useRef(loc);
+    const locPrev = locPrevRef.current;
+    useEffect(() => {
+        locPrevRef.current = loc;
+    }, [loc]);
 
-    return <div className={styles.containers}>
-        <Header locations={locations} />
-        <TransitionRoutes loc={loc} />
-    </div>;
+    return (
+        <TransitionReplace
+            component="main"
+            fromRight={locationsIndex[locPrev] < locationsIndex[loc]}
+        >
+            <div key={loc}>
+                {children}
+            </div>
+        </TransitionReplace>
+    );
 }
 
-function routeFromConfig(config) {
-    const { childRoutes, path, getComponent } = config;
-    const routeProps = (path === '/')
-        ? { index: true }
-        : {
-            path: path.substring(1) + (childRoutes ? '*' : '')
-        };
-    return <Route
-        key={path}
-        Component={asyncComponent(getComponent, Spinner)}
-        {...routeProps}
-    >
-    </Route>;
+const routes = routeConfigFlat.reduce((rs, config) => {
+    const { path, component } = config;
+    const isRoot = (path === '/');
+
+    rs.push((
+        <Route
+            key={path}
+            path={path}
+            exact={isRoot}
+            strict
+            component={component}
+        />
+    ));
+
+    if (!isRoot && path.endsWith('/')) {
+        // Redirect from `/<path>` to `/<path>/`.
+        const from = path.slice(0, -1);
+        rs.push((
+            <Redirect
+                key={from}
+                from={from}
+                exact
+                strict
+                to={path}
+            />
+        ));
+    }
+
+    return rs;
+}, []);
+
+/**
+ * Asynchronous default route ("404 Not Found") component.
+ * @returns {React.ReactElement} The app's elements.
+ */
+function NotFound() {
+    return (
+        <AsyncComponent getModule={() => import('src/NotFound')} />
+    );
 }
 
-const routes = createRoutesFromElements(
-    <Route element={<App />}>
-        {routeConfigFlat.map(routeFromConfig)}
-        <Route path='/*' Component={asyncComponent(NotFound, Spinner)} />
-    </Route>
-);
-const router = createBrowserRouter(routes);
-
-export { createRoot };
-
-export function render(root) {
-    root.render(<RouterProvider router={router} />);
+/**
+ * React component for the entire app.
+ * @returns {React.ReactElement} The app's elements.
+ */
+function App() {
+    return (
+        <div className={styles.containers}>
+            <BrowserRouter basename={__webpack_public_path__}>
+                <Header locations={locations} />
+                <TransitionRoutes>
+                    <Switch>
+                        { routes }
+                        <Route component={NotFound} />
+                    </Switch>
+                </TransitionRoutes>
+            </BrowserRouter>
+        </div>
+    );
 }
 
+/**
+ * Render the app.
+ * @param {HTMLElement} rootElem - Element in which to render.
+ */
+export default function render(rootElem) {
+    createRoot(rootElem).render(<App />);
+}

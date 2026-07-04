@@ -1,15 +1,20 @@
-'use strict';
+import webpackConfigBase from './webpack.config.base.js';
 
-const config = require('./webpack.config.base.js');
+/**
+ * @returns {object} Default webpack configuration.
+ */
+export default function webpackConfigDefault() {
+    const config = webpackConfigBase();
 
-if (!config.performance) {
-    config.performance = {};
+    if (!config.performance) {
+        config.performance = {};
+    }
+
+    config.performance.hints = false;
+
+    if (!config.plugins) {
+        config.plugins = [];
+    }
+
+    return config;
 }
-
-config.performance.hints = false;
-
-if (!config.plugins) {
-    config.plugins = [];
-}
-
-module.exports = config;

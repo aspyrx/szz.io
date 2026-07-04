@@ -1,8 +1,7 @@
 import 'normalize.css/normalize.css';
-import styles from './index.less';
+import * as styles from './index.less';
 
 import backgroundData from 'public/assets/bg.svg';
-import onAppLoaded from 'bundle-loader!src/app';
 
 (function background(parent) {
     const elem = document.createElement('object');
@@ -35,6 +34,9 @@ let spinner = (function spinner() {
 
 document.body.appendChild(spinner);
 
+/**
+ *
+ */
 function removeSpinner() {
     spinner.parentElement.removeChild(spinner);
     spinner = null;
@@ -46,35 +48,34 @@ document.body.appendChild(appDiv);
 
 // check for CSS3 flexbox support
 if (!('flex' in appDiv.style)) {
-    setTimeout(() => window.alert( // eslint-disable-line no-alert
+    setTimeout(() => window.alert(
         'Your browser does not appear to support CSS Flexbox. Certain parts of'
         + ' the website may not display correctly. Apologies for any'
-        + ' inconvenience!'
+        + ' inconvenience!',
     ), 0);
 }
 
-function start() {
-    onAppLoaded(app => {
-        app.render(app.createRoot(appDiv));
-        if (spinner) {
-            spinner.classList.add(styles.loaded);
-            setTimeout(removeSpinner, 500);
-        }
-    });
+/**
+ * Start the app.
+ */
+async function start() {
+    const { default: render } = await import('src/app');
+    render(appDiv);
+    if (spinner) {
+        spinner.classList.add(styles.loaded);
+        setTimeout(removeSpinner, 500);
+    }
 }
 
 start();
 
-if (module.hot) {
-    module.hot.accept('bundle-loader!src/app', () => {
-        start();
-    });
-
-    module.hot.dispose(() => {
+const webpackHot = import.meta.webpackHot;
+if (webpackHot) {
+    webpackHot.accept('src/app', start);
+    webpackHot.dispose(() => {
         document.body.removeChild(appDiv);
         if (spinner) {
             removeSpinner();
         }
     });
 }
-

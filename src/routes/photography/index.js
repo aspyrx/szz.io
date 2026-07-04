@@ -1,16 +1,20 @@
-import React, { Component, forwardRef } from 'react';
+import React, {
+    useEffect,
+    useRef,
+} from 'react';
 import {
-    Routes, Route, Link, Navigate,
-    useParams
+    Link,
+    Redirect,
+    Route,
+    useParams,
+    useRouteMatch,
 } from 'react-router-dom';
-import { string } from 'prop-types';
-import classNames from 'classnames';
 
 import TransitionReplace from 'src/components/TransitionReplace';
 import Anchor from 'src/components/Anchor';
 import cacheable from 'src/components/cacheable';
 
-import styles from './index.less';
+import * as styles from './index.less';
 
 const previewTransition = {
     className: styles.transitionReplace,
@@ -18,20 +22,29 @@ const previewTransition = {
     transitionName: [
         'appear', 'appearActive',
         'enter', 'enterActive',
-        'leave', 'leaveActive'
+        'leave', 'leaveActive',
     ].reduce((memo, key) => {
         memo[key] = styles[key];
         return memo;
-    }, {})
+    }, {}),
 };
 
+/**
+ * Get filename from path.
+ * @param {string} path - The path.
+ * @returns {string} The filename.
+ */
 function getFilename(path) {
     return path.substring(path.lastIndexOf('/') + 1);
 }
 
-const photosCtx = require.context(
-    'public/photography', false, /\.jpg$/
+const photosCtx = import.meta.webpackContext(
+    'public/photography', {
+        recursive: false,
+        include: /\.jpg$/,
+    },
 );
+
 const photosMap = Object.create(null);
 const photos = photosCtx.keys().map((key, index) => {
     const url = photosCtx(key);
@@ -45,124 +58,107 @@ const Img = cacheable(function img(props) {
     return <img {...props} />;
 });
 
+/**
+ * Thumbnails grid.
+ * @returns {React.ReactElement} The component's elements.
+ */
 function Thumbnails() {
-    const thumbs = photos.map(photo => {
+    const match = useRouteMatch();
+    const thumbs = photos.map((photo) => {
         const { filename, url } = photo;
-        return <Link
-            key={filename}
-            to={`./preview/${filename}`}
-            className={styles.thumbnail}
-        >
-            <Img src={url} loadedClass={styles.loaded} />
-        </Link>;
+        return (
+            <Link
+                key={filename}
+                to={`${match.url}preview/${filename}`}
+                className={styles.thumbnail}
+            >
+                <Img src={url} loadedClass={styles.loaded} />
+            </Link>
+        );
     });
 
-    return <nav className={styles.thumbnails}>
-        {thumbs}
-    </nav>;
+    return (
+        <nav className={styles.thumbnails}>
+            {thumbs}
+        </nav>
+    );
 }
 
-const PhotoPreview = forwardRef(function PhotoPreview(props, ref) {
-    const { filename, className } = props;
+/**
+ * Preview modal.
+ * @returns {React.ReactElement} The component's elements.
+ */
+function Preview() {
+    const { filename } = useParams();
+    const filenamePrevRef = useRef(filename);
+    const filenamePrev = filenamePrevRef.current;
+    useEffect(() => {
+        filenamePrevRef.current = filename;
+    }, [filename]);
+
     const photo = photosMap[filename];
     if (!photo) {
-        return <Navigate to='..' />;
+        return <Redirect to=".." />;
     }
-
     const { index, url } = photo;
 
+    let fromRight = false;
+    const photoPrev = photosMap[filenamePrev];
+    if (photoPrev) {
+        const { index: indexPrev } = photoPrev;
+        fromRight = indexPrev < index;
+    }
+
     const next = index > 0
-        ? <Link
-            className={styles.prev}
-            to={`../${photos[index - 1].filename}`}
-            relative="path"
-        />
+        ? (
+                <Link
+                    className={styles.prev}
+                    to={`./${photos[index - 1].filename}`}
+                    relative="path"
+                />
+            )
         : null;
 
     const prev = index < photos.length - 1
-        ? <Link
-            className={styles.next}
-            to={`../${photos[index + 1].filename}`}
-            relative="path"
-        />
+        ? (
+                <Link
+                    className={styles.next}
+                    to={`./${photos[index + 1].filename}`}
+                    relative="path"
+                />
+            )
         : null;
 
-    const classes = classNames(className, styles.photoPreview);
-    return <div className={classes} ref={ref}>
-        <Link to='..' className={styles.close} />
-        <Anchor href={url}>
-            <img src={url} className={styles.image} />
-        </Anchor>
-        {next}
-        {prev}
-    </div>;
-});
-
-PhotoPreview.propTypes = {
-    className: string,
-    filename: string.isRequired
-};
-
-class TransitionPreviews extends Component {
-    static get propTypes() {
-        return {
-            filename: string
-        };
-    }
-
-    constructor() {
-        super();
-        this.state = {
-            fromRight: false
-        };
-    }
-
-    componentDidUpdate(prevProps) {
-        const { filename: prevFilename } = prevProps;
-        const { filename } = this.props;
-        if (filename === prevFilename) {
-            return;
-        }
-
-        const { index: prevIndex } = photosMap[prevFilename];
-        const { index } = photosMap[filename];
-        const nextFromRight = index > prevIndex;
-        const { fromRight } = this.state;
-
-        if (nextFromRight !== fromRight) {
-            this.setState({ fromRight: nextFromRight });
-        }
-    }
-
-    render() {
-        const { filename } = this.props;
-        const { fromRight } = this.state;
-
-        return <TransitionReplace
+    return (
+        <TransitionReplace
             {...previewTransition}
             fromRight={fromRight}
         >
-            <PhotoPreview key={filename} filename={filename} />
-        </TransitionReplace>;
-    }
+            <div key={filename} className={styles.photoPreview}>
+                <Link to=".." className={styles.close} />
+                <Anchor href={url}>
+                    <img src={url} className={styles.image} />
+                </Anchor>
+                {next}
+                {prev}
+            </div>
+        </TransitionReplace>
+    );
 }
 
-function Preview() {
-    const { filename } = useParams();
-    return <TransitionPreviews filename={filename} />;
-}
-
-export default class Photography extends React.Component {
-    render() {
-        return <section className={styles.photography}>
+/**
+ * Photography page.
+ * @returns {React.ReactElement} The component's elements.
+ */
+export default function Photography() {
+    const match = useRouteMatch();
+    return (
+        <section className={styles.photography}>
             <Thumbnails />
-            <Routes>
-                <Route
-                    path='preview/:filename'
-                    element={<Preview />}
-                />
-            </Routes>
-        </section>;
-    }
+            <Route
+                path={`${match.path}preview/:filename`}
+                component={Preview}
+            />
+        </section>
+    );
 }
-
